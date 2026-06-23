@@ -32,48 +32,45 @@ class _PocScreenState extends State<PocScreen> {
   String _wordleDeHoy = "Presiona el botón para cargar";
   bool _isLoading = false;
 
-  Future<void> _obtenerWordle() async {
-    setState(() {
-      _isLoading = true;
-      _wordleDeHoy = "Cargando palabra...";
-    });
+Future<void> _obtenerWordle() async {
+  setState(() {
+    _isLoading = true;
+    _wordleDeHoy = "Cargando palabra...";
+  });
 
-    String fechaHoy = DateTime.now().toString().split(' ')[0];
-    
-    final url = Uri.parse('https://wordle-api3.p.rapidapi.com/getwordfor/$fechaHoy');
+  final url = Uri.parse('https://wordle-today.p.rapidapi.com/today');
 
-    try {
-      final response = await http.get(
-        url,
-        headers: {
-          // API
-          'Content-Type': 'application/json',
-          'x-rapidapi-host': 'wordle-api3.p.rapidapi.com',
-          'x-rapidapi-key': '35a8af7d2amshce5550427219eeap11c16ejsn0d5df3222fa4', 
-        },
-      );
-      // Pequeña seccion de debug para saber si el API falla de alguna manera.
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
+  try {
+    final response = await http.get(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'x-rapidapi-host': 'wordle-today.p.rapidapi.com',
+        'x-rapidapi-key': '35a8af7d2amshce5550427219eeap11c16ejsn0d5df3222fa4', 
+      },
+    );
 
-        setState(() {
-          _wordleDeHoy = data['word']?.toString().toUpperCase() ?? "No se encontró la propiedad 'word'";
-        });
-      } else {
-        setState(() {
-          _wordleDeHoy = "Error del servidor: ${response.statusCode}";
-        });
-      }
-    } catch (e) {
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      
       setState(() {
-        _wordleDeHoy = "Error de conexión: $e";
+        _wordleDeHoy = (data['today'] ?? "No se encontró el campo en el JSON").toString().toUpperCase();
       });
-    } finally {
+    } else {
       setState(() {
-        _isLoading = false;
+        _wordleDeHoy = "Error de API: ${response.statusCode}";
       });
     }
+  } catch (e) {
+    setState(() {
+      _wordleDeHoy = "Error de red: $e";
+    });
+  } finally {
+    setState(() {
+      _isLoading = false;
+    });
   }
+}
 
   @override
   Widget build(BuildContext context) {
