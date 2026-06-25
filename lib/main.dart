@@ -12,9 +12,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Wordle Alarm POC',
+      title: 'Wordle POC',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.teal,
+        useMaterial3: true,
       ),
       home: const PocScreen(),
     );
@@ -29,89 +31,107 @@ class PocScreen extends StatefulWidget {
 }
 
 class _PocScreenState extends State<PocScreen> {
-  String _wordleDeHoy = "Presiona el botón para cargar";
+  String _wordleDeHoy = "";
+  String _intento = "";
+  String _resultado = "";
   bool _isLoading = false;
 
-Future<void> _obtenerWordle() async {
-  setState(() {
-    _isLoading = true;
-    _wordleDeHoy = "Cargando palabra...";
-  });
-
-  final url = Uri.parse('https://wordle-today.p.rapidapi.com/today');
-
-  try {
-    final response = await http.get(
-      url,
-      headers: {
-        'Content-Type': 'application/json',
-        'x-rapidapi-host': 'wordle-today.p.rapidapi.com',
-        'x-rapidapi-key': '35a8af7d2amshce5550427219eeap11c16ejsn0d5df3222fa4', 
-      },
-    );
-
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      
-      setState(() {
-        _wordleDeHoy = (data['today'] ?? "No se encontró el campo en el JSON").toString().toUpperCase();
-      });
-    } else {
-      setState(() {
-        _wordleDeHoy = "Error de API: ${response.statusCode}";
-      });
-    }
-  } catch (e) {
+  Future<void> _obtenerWordle() async {
     setState(() {
-      _wordleDeHoy = "Error de red: $e";
+      _isLoading = true;
+      _wordleDeHoy = "";
+      _resultado = "";
+      _intento = "";
     });
-  } finally {
+
+    final fechaHoy = DateTime.now().toString().split(' ')[0];
+    final url = Uri.parse('https://www.nytimes.com/svc/wordle/v2/$fechaHoy.json');
+
+    try {
+      final response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        setState(() {
+          _wordleDeHoy = (data['solution'] ?? "").toString().toUpperCase();
+        });
+      } else {
+        setState(() => _resultado = "Error API");
+      }
+    } catch (e) {
+      setState(() => _resultado = "Error red");
+    } finally {
+      setState(() => _isLoading = false);
+    }
+  }
+
+  void _validarIntento() {
+    final intento = _intento.toUpperCase().trim();
+
+    if (intento.isEmpty || intento.length != _wordleDeHoy.length) {
+      setState(() => _resultado = "");
+      return;
+    }
+
     setState(() {
-      _isLoading = false;
+      _resultado = intento == _wordleDeHoy ? "GANASTE" : "PERDISTE";
     });
   }
-}
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('POC: API Rest Wordle'),
+        title: const Text('Wordle POC'),
         centerTitle: true,
+        backgroundColor: Colors.teal,
       ),
       body: Center(
         child: Padding(
-          padding: const EdgeInsets.all(20.0),
+          padding: const EdgeInsets.all(24.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
-                _wordleDeHoy,
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                  color: _isLoading ? Colors.grey : Colors.teal.shade700,
-                  letterSpacing: 2,
+              if (_isLoading)
+                const CircularProgressIndicator(color: Colors.teal)
+              else if (_wordleDeHoy.isNotEmpty) ...[
+                TextField(
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(fontSize: 28, letterSpacing: 2),
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    hintText: 'Ingresa la palabra',
+                    contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+                  ),
+                  maxLength: 5,
+                  onChanged: (v) => _intento = v,
+                  onSubmitted: (_) => _validarIntento(),
                 ),
-                textAlign: TextAlign.center,
-              ),        
-              const SizedBox(height: 40),
-              
-              // Boton para cargar la palabra del dia
-              ElevatedButton(
-                onPressed: _isLoading ? null : _obtenerWordle,
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-                  textStyle: const TextStyle(fontSize: 18),
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: _validarIntento,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.teal,
+                    foregroundColor: Colors.white,
+                  ),
+                  child: const Text('Validar'),
                 ),
-                child: _isLoading 
-                    ? const SizedBox(
-                        width: 20,
-                        height: 20,
-                        child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
-                      )
-                    : const Text('Obtener Wordle de Hoy'),
-              ),
+                const SizedBox(height: 40),
+                if (_resultado.isNotEmpty)
+                  Text(
+                    _resultado,
+                    style: const TextStyle(fontSize: 48, fontWeight: FontWeight.bold),
+                  ),
+              ] else
+                ElevatedButton(
+                  onPressed: _isLoading ? null : _obtenerWordle,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.teal,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 16),
+                  ),
+                  child: const Text('Obtener palabra del día', style: TextStyle(fontSize: 18)),
+                ),
             ],
           ),
         ),
