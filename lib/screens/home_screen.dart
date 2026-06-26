@@ -136,6 +136,128 @@ class _HomeScreenState extends State<HomeScreen>
     );
   }
 
+  Widget _buildDrawer() 
+  {
+    return Drawer
+    (
+      backgroundColor: const Color(0xFF1C1C1E),
+      child: SafeArea
+      (
+        child: Column
+        (
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: 
+          [
+            Padding
+            (
+              padding: const EdgeInsets.fromLTRB(24, 24, 24, 8),
+              child: Column
+              (
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: const 
+                [
+                  Text
+                  (
+                    "Alarmle",
+                    style: TextStyle
+                    (
+                      color: Colors.white,
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: -0.5,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const Divider(color: Color(0xFF3A3A3C)),
+            const SizedBox(height: 8),
+
+            _buildDrawerItem
+            (
+              icon: Icons.alarm,
+              label: "Alarmas",
+              selected: true,
+              onTap: () => Navigator.pop(context),
+            ),
+
+            _buildDrawerItem
+            (
+              icon: Icons.settings_outlined,
+              label: "Configuración",
+              onTap: ()
+              {
+                Navigator.pop(context);
+              },
+            ),
+
+            _buildDrawerItem
+            (
+              icon: Icons.info_outline,
+              label: "Acerca de",
+              onTap: () 
+              {
+                Navigator.pop(context);
+              },
+            ),
+            const Spacer(),
+            const Divider(color: Color(0xFF3A3A3C)),
+
+            Padding
+            (
+              padding: const EdgeInsets.fromLTRB(24, 8, 24, 16),
+              child: Text
+              (
+                "Versión 1.0.0",
+                style: const TextStyle
+                (
+                  color: Color(0xFF636366),
+                  fontSize: 12,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDrawerItem
+  ({
+    required IconData icon,
+    required String label,
+    bool selected = false,
+    required VoidCallback onTap,
+  }) 
+  {
+    return ListTile
+    (
+      onTap: onTap,
+      leading: Icon
+      (
+        icon,
+        color: selected ? const Color(0xFF0A84FF) : const Color(0xFF8E8E93),
+        size: 22,
+      ),
+
+      title: Text
+      (
+        label,
+        style: TextStyle
+        (
+          color: selected ? const Color(0xFF0A84FF) : Colors.white,
+          fontSize: 16,
+          fontWeight: selected ? FontWeight.w600 : FontWeight.w400,
+        ),
+      ),
+
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      selectedTileColor: const Color(0xFF0A84FF).withOpacity(0.1),
+      selected: selected,
+      contentPadding: const EdgeInsets.symmetric(horizontal: 20),
+    );
+  }
+
   @override
   Widget build(BuildContext context) 
   {
@@ -146,6 +268,7 @@ class _HomeScreenState extends State<HomeScreen>
     return Scaffold
     (
       backgroundColor: Colors.black,
+      endDrawer: _buildDrawer(),
       body: SafeArea
       (
         child: Column
@@ -235,11 +358,14 @@ class _HomeScreenState extends State<HomeScreen>
                             ),
                           ],
                         ),
-                        IconButton
+
+                        Builder
                         (
-                          onPressed: () {},
-                          icon: const Icon(Icons.more_vert,
-                              color: Colors.white),
+                          builder: (context) => IconButton
+                          (
+                            onPressed: () => Scaffold.of(context).openEndDrawer(),
+                            icon: const Icon(Icons.menu, color: Colors.white),
+                          ),
                         ),
                       ],
                     ),
