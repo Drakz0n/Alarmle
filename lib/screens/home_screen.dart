@@ -1,8 +1,7 @@
 import 'package:alarmle/viewmodels/alarm_view_model.dart';
-import 'package:alarmle/viewmodels/alarm_view_model.dart';
+import 'package:alarmle/widgets/edit_alarm_sheet.dart';
 import 'package:alarmle/widgets/add_alarm_sheet.dart';
-import 'package:alarmle/widgets/add_alarm_sheet.dart';
-import 'package:alarmle/widgets/alarm_card.dart';
+import 'package:alarmle/models/alarm_model.dart';
 import 'package:alarmle/widgets/alarm_card.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -100,6 +99,37 @@ class _HomeScreenState extends State<HomeScreen>
           (
             onAlarmAdded: (alarm) =>
                 context.read<AlarmViewModel>().addAlarm(alarm),
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _openEditSheet(Alarm alarm) 
+  {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: const Color(0xFF1C1C1E),
+      shape: const RoundedRectangleBorder
+      (
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+
+      builder: (_) => DraggableScrollableSheet
+      (
+        expand: false,
+        initialChildSize: 0.92,
+        minChildSize: 0.5,
+        maxChildSize: 0.95,
+        builder: (context, scrollController) => SingleChildScrollView
+        (
+          controller: scrollController,
+          child: EditAlarmSheet
+          (
+            alarm: alarm,
+            onAlarmEdited: (edited) =>
+                context.read<AlarmViewModel>().editAlarm(edited),
           ),
         ),
       ),
@@ -276,7 +306,7 @@ class _HomeScreenState extends State<HomeScreen>
                           isSelected: isSelected,
                           onTap: _selectionMode
                               ? () => _toggleSelection(alarm.id)
-                              : null,
+                              : () => _openEditSheet(alarm),
                           onLongPress: _selectionMode
                               ? null
                               : () => _enterSelectionMode(alarm.id),

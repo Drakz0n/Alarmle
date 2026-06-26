@@ -46,6 +46,16 @@ class AlarmViewModel extends ChangeNotifier
     notifyListeners();
   }
 
+  Future<void> editAlarm(Alarm alarm) async 
+  {
+    final index = _alarms.indexWhere((a) => a.id == alarm.id);
+    if (index == -1) return;
+    _alarms[index] = alarm;
+    _alarms.sort((a, b) => (a.hour * 60 + a.minute).compareTo(b.hour * 60 + b.minute));
+    await _storage.saveAlarms(_alarms);
+    notifyListeners();
+  }
+
   String get nextAlarmText 
   {
     final enabled = _alarms.where((a) => a.isEnabled).toList();
