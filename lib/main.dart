@@ -32,11 +32,13 @@ class WordleKey {
 class WordleKeyboard extends StatelessWidget {
   final List<List<WordleKey>> rows;
   final void Function(WordleKey) onKeyPressed;
+  final Map<String, Color> keyColors;
 
   const WordleKeyboard({
     super.key,
     required this.rows,
     required this.onKeyPressed,
+    required this.keyColors,
   });
 
   @override
@@ -51,12 +53,16 @@ class WordleKeyboard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: row.map((key) {
                 final isWide = key.isSpecial;
+                final bg = keyColors[key.label] ?? const Color(0xFFD3D3D3);
+                final textColor = (key.label == 'ENTER' || key.label == 'BORRAR')
+                    ? Colors.black87
+                    : _textColorForBg(bg);
                 final button = Expanded(
                   flex: isWide ? 15 : 10,
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 3.0),
                     child: Material(
-                      color: const Color(0xFFD3D3D3),
+                      color: bg,
                       borderRadius: BorderRadius.circular(6.0),
                       child: InkWell(
                         onTap: () => onKeyPressed(key),
@@ -66,10 +72,10 @@ class WordleKeyboard extends StatelessWidget {
                           alignment: Alignment.center,
                           child: Text(
                             key.label,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
-                              color: Colors.black87,
+                              color: textColor,
                             ),
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -86,6 +92,13 @@ class WordleKeyboard extends StatelessWidget {
       ),
     );
   }
+
+  static Color _textColorForBg(Color bg) {
+    if (bg == const Color(0xFF6AAA64) || bg == const Color(0xFFC9B458) || bg == const Color(0xFF787C7E)) {
+      return Colors.white;
+    }
+    return Colors.black87;
+  }
 }
 
 class PocScreen extends StatefulWidget {
@@ -98,8 +111,9 @@ class PocScreen extends StatefulWidget {
 class _PocScreenState extends State<PocScreen> {
   String _wordleDeHoy = "";
   String _intento = "";
-  String _resultado = "";
   bool _isLoading = false;
+  List<Color?> _boxColors = List.filled(5, null);
+  final Map<String, Color> _keyColors = {};
 
   late final List<List<WordleKey>> _keyboardRows = _buildKeyboardRows();
 
@@ -113,8 +127,9 @@ class _PocScreenState extends State<PocScreen> {
     setState(() {
       _isLoading = true;
       _wordleDeHoy = "";
-      _resultado = "";
       _intento = "";
+      _boxColors = List.filled(5, null);
+      _keyColors.clear();
     });
 
     final fechaHoy = DateTime.now().toString().split(' ')[0];
@@ -129,10 +144,10 @@ class _PocScreenState extends State<PocScreen> {
           _wordleDeHoy = (data['solution'] ?? "").toString().toUpperCase();
         });
       } else {
-        setState(() => _resultado = "Error API");
+        setState(() => _wordleDeHoy = "");
       }
     } catch (e) {
-      setState(() => _resultado = "Error red");
+      setState(() => _wordleDeHoy = "");
     } finally {
       setState(() => _isLoading = false);
     }
@@ -142,12 +157,53 @@ class _PocScreenState extends State<PocScreen> {
     final intento = _intento.toUpperCase().trim();
 
     if (intento.isEmpty || intento.length != _wordleDeHoy.length) {
-      setState(() => _resultado = "");
       return;
     }
 
+    final colors = List<Color?>.filled(5, null);
+    final keyColors = Map<String, Color>.from(_keyColors);
+
+    final solutionChars = _wordleDeHoy.split('');
+    final guessChars = intento.split('');
+    final used = List<bool>.filled(5, false);
+
+    for (int i = 0; i < 5; i++) {
+      if (guessChars[i] == solutionChars[i]) {
+        colors[i] = const Color(0xFF6AAA64);
+        used[i] = true;
+        keyColors[guessChars[i]] = const Color(0xFF6AAA64);
+      }
+    }
+
+    for (int i = 0; i < 5; i++) {
+      if (colors[i] != null) continue;
+      final letter = guessChars[i];
+      bool found = false;
+      for (int j = 0; j < 5; j++) {
+        if (!used[j] && solutionChars[j] == letter) {
+          used[j] = true;
+          found = true;
+          break;
+        }
+      }
+      if (found) {
+        colors[i] = const Color(0xFFC9B458);
+        if ((keyColors[letter] ?? const Color(0xFFD3D3D3)) != const Color(0xFF6AAA64)) {
+          keyColors[letter] = const Color(0xFFC9B458);
+        }
+      } else {
+        colors[i] = const Color(0xFF787C7E);
+        keyColors[letter] = const Color(0xFF787C7E);
+      }
+    }
+
+    final allGreen = colors.every((c) => c == const Color(0xFF6AAA64));
+
     setState(() {
-      _resultado = intento == _wordleDeHoy ? "GANASTE" : "PERDISTE";
+      _boxColors = colors;
+      _keyColors
+        ..clear()
+        ..addAll(keyColors);
     });
   }
 
@@ -158,6 +214,9 @@ class _PocScreenState extends State<PocScreen> {
         if (_intento.isNotEmpty) {
           _intento = _intento.substring(0, _intento.length - 1);
         }
+        if (_intento.length < 5) {
+          _boxColors = List.filled(5, null);
+        }
       });
       return;
     }
@@ -165,9 +224,14 @@ class _PocScreenState extends State<PocScreen> {
       _validarIntento();
       return;
     }
-    if (_intento.length < _wordleDeHoy.length) {
-      setState(() => _intento += label);
-    }
+    setState(() {
+      if (_intento.length < 5) {
+        _intento += label;
+      }
+      if (_intento.length < 5) {
+        _boxColors = List.filled(5, null);
+      }
+    });
   }
 
   @override
@@ -194,28 +258,31 @@ class _PocScreenState extends State<PocScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: List.generate(5, (index) {
                           final letra = index < _intento.length ? _intento[index] : '';
+                          final bg = index < _boxColors.length ? _boxColors[index] : null;
+                          final textColor = bg != null ? Colors.white : Colors.black87;
                           return Container(
                             width: 56,
                             height: 56,
                             margin: const EdgeInsets.symmetric(horizontal: 4),
                             decoration: BoxDecoration(
-                              border: Border.all(color: Colors.teal, width: 2),
+                              color: bg,
+                              border: bg == null ? Border.all(color: Colors.teal, width: 2) : null,
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: Center(
                               child: Text(
                                 letra,
-                                style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+                                style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: textColor),
                               ),
                             ),
                           );
                         }),
                       ),
                       const SizedBox(height: 30),
-                      if (_resultado.isNotEmpty)
-                        Text(
-                          _resultado,
-                          style: const TextStyle(fontSize: 48, fontWeight: FontWeight.bold),
+                      if (_boxColors.isNotEmpty && _boxColors.every((c) => c == const Color(0xFF6AAA64)))
+                        const Text(
+                          "GANASTE",
+                          style: TextStyle(fontSize: 48, fontWeight: FontWeight.bold),
                         ),
                     ] else
                       ElevatedButton(
@@ -233,7 +300,7 @@ class _PocScreenState extends State<PocScreen> {
             ),
           ),
           if (_wordleDeHoy.isNotEmpty && !_isLoading)
-            WordleKeyboard(rows: _keyboardRows, onKeyPressed: _onKeyPressed),
+            WordleKeyboard(rows: _keyboardRows, onKeyPressed: _onKeyPressed, keyColors: _keyColors),
         ],
       ),
     );
