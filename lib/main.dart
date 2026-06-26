@@ -48,13 +48,13 @@ class WordleKeyboard extends StatelessWidget {
     return AbsorbPointer(
       absorbing: !enabled,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 12.0),
+        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
         child: Column(
           children: rows.map((row) {
             return Padding(
               padding: const EdgeInsets.symmetric(vertical: 4.0),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: row.map((key) {
                   final isWide = key.isSpecial;
                   final bg = keyColors[key.label] ?? const Color(0xFFD3D3D3);
@@ -62,26 +62,30 @@ class WordleKeyboard extends StatelessWidget {
                       ? Colors.black87
                       : _textColorForBg(bg);
                   final button = Expanded(
-                    flex: isWide ? 15 : 10,
+                    flex: isWide ? 2 : 1,
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 3.0),
-                      child: Material(
-                        color: bg,
-                        borderRadius: BorderRadius.circular(6.0),
-                        child: InkWell(
-                          onTap: () => onKeyPressed(key),
+                      child: Container(
+                        height: 48.0,
+                        decoration: BoxDecoration(
+                          color: bg,
                           borderRadius: BorderRadius.circular(6.0),
-                          child: Container(
-                            height: 48.0,
-                            alignment: Alignment.center,
-                            child: Text(
-                              key.label,
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: textColor,
+                        ),
+                        child: Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                            onTap: () => onKeyPressed(key),
+                            borderRadius: BorderRadius.circular(6.0),
+                            child: Center(
+                              child: Text(
+                                key.label,
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: textColor,
+                                ),
+                                overflow: TextOverflow.ellipsis,
                               ),
-                              overflow: TextOverflow.ellipsis,
                             ),
                           ),
                         ),
@@ -131,6 +135,12 @@ class _PocScreenState extends State<PocScreen> {
     const [WordleKey('A'), WordleKey('S'), WordleKey('D'), WordleKey('F'), WordleKey('G'), WordleKey('H'), WordleKey('J'), WordleKey('K'), WordleKey('L')],
     [WordleKey('ENTER', true), WordleKey('Z'), WordleKey('X'), WordleKey('C'), WordleKey('V'), WordleKey('B'), WordleKey('N'), WordleKey('M'), WordleKey('BORRAR', true)],
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    _obtenerWordle();
+  }
 
   Future<void> _obtenerWordle() async {
     setState(() {
@@ -263,98 +273,109 @@ class _PocScreenState extends State<PocScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Wordle POC'),
-        centerTitle: true,
-        backgroundColor: Colors.teal,
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: Center(
-              child: Padding(
-                padding: const EdgeInsets.all(24.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    if (_isLoading)
-                      const CircularProgressIndicator(color: Colors.teal)
-                    else if (_wordleDeHoy.isNotEmpty) ...[
-                      Column(
-                        children: List.generate(5, (rowIndex) {
-                          final letras = rowIndex <= _intentoActual && _historial[rowIndex].isNotEmpty
-                              ? _historial[rowIndex].split('')
-                              : (rowIndex == _intentoActual ? _intento.split('') : List.filled(5, ''));
-                          final cols = rowIndex < _historialColores.length ? _historialColores[rowIndex] : List.filled(5, null);
-                          return Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: List.generate(5, (colIndex) {
-                              final letra = colIndex < letras.length ? letras[colIndex] : '';
-                              final bg = cols[colIndex];
-                              final textColor = bg != null ? Colors.white : Colors.black87;
-                              return Container(
-                                width: 56,
-                                height: 56,
-                                margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
-                                decoration: BoxDecoration(
-                                  color: bg,
-                                  border: bg == null ? Border.all(color: Colors.teal, width: 2) : null,
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    letra,
-                                    style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: textColor),
+      body: SafeArea(
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final maxH = constraints.maxHeight;
+            final maxW = constraints.maxWidth;
+            return SingleChildScrollView(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  minHeight: maxH,
+                  maxHeight: maxH,
+                  maxWidth: maxW,
+                ),
+                child: IntrinsicHeight(
+                  child: Column(
+                    children: [
+                      Expanded(
+                        child: Center(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                if (_isLoading)
+                                  const CircularProgressIndicator(color: Colors.teal)
+                                else if (_wordleDeHoy.isNotEmpty) ...[
+                                  Column(
+                                    children: List.generate(5, (rowIndex) {
+                                      final letras = rowIndex <= _intentoActual && _historial[rowIndex].isNotEmpty
+                                          ? _historial[rowIndex].split('')
+                                          : (rowIndex == _intentoActual ? _intento.split('') : List.filled(5, ''));
+                                      final cols = rowIndex < _historialColores.length ? _historialColores[rowIndex] : List.filled(5, null);
+                                      return Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: List.generate(5, (colIndex) {
+                                          final letra = colIndex < letras.length ? letras[colIndex] : '';
+                                          final bg = cols[colIndex];
+                                          final textColor = bg != null ? Colors.white : Colors.black87;
+                                          return Expanded(
+                                            child: Padding(
+                                              padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 3),
+                                              child: AspectRatio(
+                                                aspectRatio: 1,
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                    color: bg,
+                                                    border: bg == null ? Border.all(color: Colors.teal, width: 2) : null,
+                                                    borderRadius: BorderRadius.circular(8),
+                                                  ),
+                                                  child: Center(
+                                                    child: Text(
+                                                      letra,
+                                                      style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: textColor),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          );
+                                        }),
+                                      );
+                                    }),
                                   ),
-                                ),
-                              );
-                            }),
-                          );
-                        }),
-                      ),
-                      const SizedBox(height: 24),
-                      if (_juegoTerminado) ...[
-                        Text(
-                          _historialColores[_intentoActual].every((c) => c == const Color(0xFF6AAA64)) && _wordleDeHoy.isNotEmpty
-                              ? "GANASTE"
-                              : "PERDISTE",
-                          style: const TextStyle(fontSize: 48, fontWeight: FontWeight.bold),
-                        ),
-                        const SizedBox(height: 12),
-                        if (_wordleDeHoy.isNotEmpty)
-                          Text(
-                            "Palabra: $_wordleDeHoy",
-                            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+                                  const SizedBox(height: 12),
+                                  if (_juegoTerminado) ...[
+                                    Text(
+                                      _historialColores[_intentoActual].every((c) => c == const Color(0xFF6AAA64)) && _wordleDeHoy.isNotEmpty
+                                          ? "GANASTE"
+                                          : "PERDISTE",
+                                      style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+                                    ),
+                                    const SizedBox(height: 8),
+                                    if (_wordleDeHoy.isNotEmpty)
+                                      Text(
+                                        "Palabra: $_wordleDeHoy",
+                                        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                                      ),
+                                    const SizedBox(height: 12),
+                                    ElevatedButton(
+                                      onPressed: _reiniciar,
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.teal,
+                                        foregroundColor: Colors.white,
+                                        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                                      ),
+                                      child: const Text('Reiniciar Juego', style: TextStyle(fontSize: 16)),
+                                    ),
+                                  ],
+                                ] else
+                                  const SizedBox.shrink(),
+                              ],
+                            ),
                           ),
-                        const SizedBox(height: 16),
-                        ElevatedButton(
-                          onPressed: _reiniciar,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.teal,
-                            foregroundColor: Colors.white,
-                            padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 16),
-                          ),
-                          child: const Text('Reiniciar Juego', style: TextStyle(fontSize: 18)),
                         ),
-                      ],
-                    ] else
-                      ElevatedButton(
-                        onPressed: _obtenerWordle,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.teal,
-                          foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 16),
-                        ),
-                        child: const Text('Obtener palabra del día', style: TextStyle(fontSize: 18)),
                       ),
-                  ],
+                      if (_wordleDeHoy.isNotEmpty && !_isLoading)
+                        WordleKeyboard(rows: _keyboardRows, onKeyPressed: _onKeyPressed, keyColors: _keyColors, enabled: !_juegoTerminado),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ),
-          if (_wordleDeHoy.isNotEmpty && !_isLoading)
-            WordleKeyboard(rows: _keyboardRows, onKeyPressed: _onKeyPressed, keyColors: _keyColors, enabled: !_juegoTerminado),
-        ],
+            );
+          },
+        ),
       ),
     );
   }
