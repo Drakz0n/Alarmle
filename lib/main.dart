@@ -33,62 +33,67 @@ class WordleKeyboard extends StatelessWidget {
   final List<List<WordleKey>> rows;
   final void Function(WordleKey) onKeyPressed;
   final Map<String, Color> keyColors;
+  final bool enabled;
 
   const WordleKeyboard({
     super.key,
     required this.rows,
     required this.onKeyPressed,
     required this.keyColors,
+    this.enabled = true,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 12.0),
-      child: Column(
-        children: rows.map((row) {
-          return Padding(
-            padding: const EdgeInsets.symmetric(vertical: 4.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: row.map((key) {
-                final isWide = key.isSpecial;
-                final bg = keyColors[key.label] ?? const Color(0xFFD3D3D3);
-                final textColor = (key.label == 'ENTER' || key.label == 'BORRAR')
-                    ? Colors.black87
-                    : _textColorForBg(bg);
-                final button = Expanded(
-                  flex: isWide ? 15 : 10,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 3.0),
-                    child: Material(
-                      color: bg,
-                      borderRadius: BorderRadius.circular(6.0),
-                      child: InkWell(
-                        onTap: () => onKeyPressed(key),
+    return AbsorbPointer(
+      absorbing: !enabled,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 12.0),
+        child: Column(
+          children: rows.map((row) {
+            return Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: row.map((key) {
+                  final isWide = key.isSpecial;
+                  final bg = keyColors[key.label] ?? const Color(0xFFD3D3D3);
+                  final textColor = (key.label == 'ENTER' || key.label == 'BORRAR')
+                      ? Colors.black87
+                      : _textColorForBg(bg);
+                  final button = Expanded(
+                    flex: isWide ? 15 : 10,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 3.0),
+                      child: Material(
+                        color: bg,
                         borderRadius: BorderRadius.circular(6.0),
-                        child: Container(
-                          height: 48.0,
-                          alignment: Alignment.center,
-                          child: Text(
-                            key.label,
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: textColor,
+                        child: InkWell(
+                          onTap: () => onKeyPressed(key),
+                          borderRadius: BorderRadius.circular(6.0),
+                          child: Container(
+                            height: 48.0,
+                            alignment: Alignment.center,
+                            child: Text(
+                              key.label,
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: textColor,
+                              ),
+                              overflow: TextOverflow.ellipsis,
                             ),
-                            overflow: TextOverflow.ellipsis,
                           ),
                         ),
                       ),
                     ),
-                  ),
-                );
-                return button;
-              }).toList(),
-            ),
-          );
-        }).toList(),
+                  );
+                  return button;
+                }).toList(),
+              ),
+            );
+          }).toList(),
+        ),
       ),
     );
   }
@@ -112,7 +117,11 @@ class _PocScreenState extends State<PocScreen> {
   String _wordleDeHoy = "";
   String _intento = "";
   bool _isLoading = false;
-  List<Color?> _boxColors = List.filled(5, null);
+  int _intentoActual = 0;
+  bool _juegoTerminado = false;
+
+  final List<String> _historial = List.filled(5, "");
+  final List<List<Color?>> _historialColores = List.generate(5, (_) => List.filled(5, null));
   final Map<String, Color> _keyColors = {};
 
   late final List<List<WordleKey>> _keyboardRows = _buildKeyboardRows();
@@ -128,7 +137,12 @@ class _PocScreenState extends State<PocScreen> {
       _isLoading = true;
       _wordleDeHoy = "";
       _intento = "";
-      _boxColors = List.filled(5, null);
+      _intentoActual = 0;
+      _juegoTerminado = false;
+      for (int i = 0; i < 5; i++) {
+        _historial[i] = "";
+        for (int j = 0; j < 5; j++) _historialColores[i][j] = null;
+      }
       _keyColors.clear();
     });
 
@@ -153,7 +167,7 @@ class _PocScreenState extends State<PocScreen> {
     }
   }
 
-  void _validarIntento() {
+  void _evaluarIntento() {
     final intento = _intento.toUpperCase().trim();
 
     if (intento.isEmpty || intento.length != _wordleDeHoy.length) {
@@ -197,41 +211,53 @@ class _PocScreenState extends State<PocScreen> {
       }
     }
 
-    final allGreen = colors.every((c) => c == const Color(0xFF6AAA64));
-
     setState(() {
-      _boxColors = colors;
+      _historial[_intentoActual] = intento;
+      _historialColores[_intentoActual] = colors;
       _keyColors
         ..clear()
         ..addAll(keyColors);
     });
+
+    final allGreen = colors.every((c) => c == const Color(0xFF6AAA64));
+
+    if (allGreen || _intentoActual >= 4) {
+      setState(() {
+        _juegoTerminado = true;
+      });
+    } else {
+      setState(() {
+        _intentoActual = _intentoActual + 1;
+        _intento = "";
+      });
+    }
   }
 
   void _onKeyPressed(WordleKey key) {
+    if (_juegoTerminado) return;
+
     final label = key.label;
     if (label == 'BORRAR') {
       setState(() {
         if (_intento.isNotEmpty) {
           _intento = _intento.substring(0, _intento.length - 1);
         }
-        if (_intento.length < 5) {
-          _boxColors = List.filled(5, null);
-        }
       });
       return;
     }
     if (label == 'ENTER') {
-      _validarIntento();
+      _evaluarIntento();
       return;
     }
     setState(() {
       if (_intento.length < 5) {
         _intento += label;
       }
-      if (_intento.length < 5) {
-        _boxColors = List.filled(5, null);
-      }
     });
+  }
+
+  void _reiniciar() {
+    _obtenerWordle();
   }
 
   @override
@@ -254,36 +280,63 @@ class _PocScreenState extends State<PocScreen> {
                     if (_isLoading)
                       const CircularProgressIndicator(color: Colors.teal)
                     else if (_wordleDeHoy.isNotEmpty) ...[
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: List.generate(5, (index) {
-                          final letra = index < _intento.length ? _intento[index] : '';
-                          final bg = index < _boxColors.length ? _boxColors[index] : null;
-                          final textColor = bg != null ? Colors.white : Colors.black87;
-                          return Container(
-                            width: 56,
-                            height: 56,
-                            margin: const EdgeInsets.symmetric(horizontal: 4),
-                            decoration: BoxDecoration(
-                              color: bg,
-                              border: bg == null ? Border.all(color: Colors.teal, width: 2) : null,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Center(
-                              child: Text(
-                                letra,
-                                style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: textColor),
-                              ),
-                            ),
+                      Column(
+                        children: List.generate(5, (rowIndex) {
+                          final letras = rowIndex <= _intentoActual && _historial[rowIndex].isNotEmpty
+                              ? _historial[rowIndex].split('')
+                              : (rowIndex == _intentoActual ? _intento.split('') : List.filled(5, ''));
+                          final cols = rowIndex < _historialColores.length ? _historialColores[rowIndex] : List.filled(5, null);
+                          return Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: List.generate(5, (colIndex) {
+                              final letra = colIndex < letras.length ? letras[colIndex] : '';
+                              final bg = cols[colIndex];
+                              final textColor = bg != null ? Colors.white : Colors.black87;
+                              return Container(
+                                width: 56,
+                                height: 56,
+                                margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+                                decoration: BoxDecoration(
+                                  color: bg,
+                                  border: bg == null ? Border.all(color: Colors.teal, width: 2) : null,
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    letra,
+                                    style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: textColor),
+                                  ),
+                                ),
+                              );
+                            }),
                           );
                         }),
                       ),
-                      const SizedBox(height: 30),
-                      if (_boxColors.isNotEmpty && _boxColors.every((c) => c == const Color(0xFF6AAA64)))
-                        const Text(
-                          "GANASTE",
-                          style: TextStyle(fontSize: 48, fontWeight: FontWeight.bold),
+                      const SizedBox(height: 24),
+                      if (_juegoTerminado) ...[
+                        Text(
+                          _historialColores[_intentoActual].every((c) => c == const Color(0xFF6AAA64)) && _wordleDeHoy.isNotEmpty
+                              ? "GANASTE"
+                              : "PERDISTE",
+                          style: const TextStyle(fontSize: 48, fontWeight: FontWeight.bold),
                         ),
+                        const SizedBox(height: 12),
+                        if (_wordleDeHoy.isNotEmpty)
+                          Text(
+                            "Palabra: $_wordleDeHoy",
+                            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+                          ),
+                        const SizedBox(height: 16),
+                        ElevatedButton(
+                          onPressed: _reiniciar,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.teal,
+                            foregroundColor: Colors.white,
+                            padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 16),
+                          ),
+                          child: const Text('Reiniciar Juego', style: TextStyle(fontSize: 18)),
+                        ),
+                      ],
                     ] else
                       ElevatedButton(
                         onPressed: _obtenerWordle,
@@ -300,7 +353,7 @@ class _PocScreenState extends State<PocScreen> {
             ),
           ),
           if (_wordleDeHoy.isNotEmpty && !_isLoading)
-            WordleKeyboard(rows: _keyboardRows, onKeyPressed: _onKeyPressed, keyColors: _keyColors),
+            WordleKeyboard(rows: _keyboardRows, onKeyPressed: _onKeyPressed, keyColors: _keyColors, enabled: !_juegoTerminado),
         ],
       ),
     );
