@@ -123,6 +123,7 @@ class _PocScreenState extends State<PocScreen> {
   bool _isLoading = false;
   int _intentoActual = 0;
   bool _juegoTerminado = false;
+  int _puntajeTotal = 0;
 
   final List<String> _historial = List.filled(5, "");
   final List<List<Color?>> _historialColores = List.generate(5, (_) => List.filled(5, null));
@@ -154,6 +155,7 @@ class _PocScreenState extends State<PocScreen> {
         for (int j = 0; j < 5; j++) _historialColores[i][j] = null;
       }
       _keyColors.clear();
+      _puntajeTotal = 0;
     });
 
     final fechaHoy = DateTime.now().toString().split(' ')[0];
@@ -221,6 +223,13 @@ class _PocScreenState extends State<PocScreen> {
       }
     }
 
+    final greenCount = colors.where((c) => c == const Color(0xFF6AAA64)).length;
+    final yellowCount = colors.where((c) => c == const Color(0xFFC9B458)).length;
+
+    const greenPoints = [50, 40, 30, 20, 10];
+    const yellowPoints = [10, 8, 6, 4, 2];
+    final rowScore = greenCount * greenPoints[_intentoActual] + yellowCount * yellowPoints[_intentoActual];
+
     setState(() {
       _historial[_intentoActual] = intento;
       _historialColores[_intentoActual] = colors;
@@ -231,8 +240,13 @@ class _PocScreenState extends State<PocScreen> {
 
     final allGreen = colors.every((c) => c == const Color(0xFF6AAA64));
 
+    setState(() {
+      _puntajeTotal += rowScore;
+    });
+
     if (allGreen || _intentoActual >= 4) {
       setState(() {
+        if (!allGreen) _puntajeTotal = 0;
         _juegoTerminado = true;
       });
     } else {
@@ -335,20 +349,38 @@ class _PocScreenState extends State<PocScreen> {
                                       );
                                     }),
                                   ),
-                                  const SizedBox(height: 12),
+                                  const SizedBox(height: 8),
                                   if (_juegoTerminado) ...[
                                     Text(
                                       _historialColores[_intentoActual].every((c) => c == const Color(0xFF6AAA64)) && _wordleDeHoy.isNotEmpty
                                           ? "GANASTE"
                                           : "PERDISTE",
-                                      style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+                                      style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
                                     ),
-                                    const SizedBox(height: 8),
-                                    if (_wordleDeHoy.isNotEmpty)
+                                    const SizedBox(height: 6),
+                                    if (!(_historialColores[_intentoActual].every((c) => c == const Color(0xFF6AAA64))) && _wordleDeHoy.isNotEmpty)
                                       Text(
                                         "Palabra: $_wordleDeHoy",
-                                        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                                        style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
                                       ),
+                                  ],
+                                  const SizedBox(height: 8),
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xFFF0F0F0),
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: Text(
+                                      "PUNTAJE: $_puntajeTotal PTS",
+                                      style: const TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                        letterSpacing: 1.2,
+                                      ),
+                                    ),
+                                  ),
+                                  if (_juegoTerminado) ...[
                                     const SizedBox(height: 12),
                                     ElevatedButton(
                                       onPressed: _reiniciar,
