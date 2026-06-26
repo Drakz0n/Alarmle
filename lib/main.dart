@@ -23,6 +23,71 @@ class MyApp extends StatelessWidget {
   }
 }
 
+class WordleKey {
+  final String label;
+  final bool isSpecial;
+  const WordleKey(this.label, [this.isSpecial = false]);
+}
+
+class WordleKeyboard extends StatelessWidget {
+  final List<List<WordleKey>> rows;
+  final void Function(WordleKey) onKeyPressed;
+
+  const WordleKeyboard({
+    super.key,
+    required this.rows,
+    required this.onKeyPressed,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 12.0),
+      child: Column(
+        children: rows.map((row) {
+          return Padding(
+            padding: const EdgeInsets.symmetric(vertical: 4.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: row.map((key) {
+                final isWide = key.isSpecial;
+                final button = Expanded(
+                  flex: isWide ? 15 : 10,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 3.0),
+                    child: Material(
+                      color: const Color(0xFFD3D3D3),
+                      borderRadius: BorderRadius.circular(6.0),
+                      child: InkWell(
+                        onTap: () => onKeyPressed(key),
+                        borderRadius: BorderRadius.circular(6.0),
+                        child: Container(
+                          height: 48.0,
+                          alignment: Alignment.center,
+                          child: Text(
+                            key.label,
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black87,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+                return button;
+              }).toList(),
+            ),
+          );
+        }).toList(),
+      ),
+    );
+  }
+}
+
 class PocScreen extends StatefulWidget {
   const PocScreen({super.key});
 
@@ -35,6 +100,14 @@ class _PocScreenState extends State<PocScreen> {
   String _intento = "";
   String _resultado = "";
   bool _isLoading = false;
+
+  late final List<List<WordleKey>> _keyboardRows = _buildKeyboardRows();
+
+  static List<List<WordleKey>> _buildKeyboardRows() => [
+    [WordleKey('Q'), WordleKey('W'), WordleKey('E'), WordleKey('R'), WordleKey('T'), WordleKey('Y'), WordleKey('U'), WordleKey('I'), WordleKey('O'), WordleKey('P')],
+    const [WordleKey('A'), WordleKey('S'), WordleKey('D'), WordleKey('F'), WordleKey('G'), WordleKey('H'), WordleKey('J'), WordleKey('K'), WordleKey('L')],
+    [WordleKey('ENTER', true), WordleKey('Z'), WordleKey('X'), WordleKey('C'), WordleKey('V'), WordleKey('B'), WordleKey('N'), WordleKey('M'), WordleKey('BORRAR', true)],
+  ];
 
   Future<void> _obtenerWordle() async {
     setState(() {
@@ -76,6 +149,25 @@ class _PocScreenState extends State<PocScreen> {
     setState(() {
       _resultado = intento == _wordleDeHoy ? "GANASTE" : "PERDISTE";
     });
+  }
+
+  void _onKeyPressed(WordleKey key) {
+    final label = key.label;
+    if (label == 'BORRAR') {
+      setState(() {
+        if (_intento.isNotEmpty) {
+          _intento = _intento.substring(0, _intento.length - 1);
+        }
+      });
+      return;
+    }
+    if (label == 'ENTER') {
+      _validarIntento();
+      return;
+    }
+    if (_intento.length < _wordleDeHoy.length) {
+      setState(() => _intento += label);
+    }
   }
 
   @override
@@ -124,7 +216,7 @@ class _PocScreenState extends State<PocScreen> {
                   ),
               ] else
                 ElevatedButton(
-                  onPressed: _isLoading ? null : _obtenerWordle,
+                  onPressed: _obtenerWordle,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.teal,
                     foregroundColor: Colors.white,
@@ -136,6 +228,9 @@ class _PocScreenState extends State<PocScreen> {
           ),
         ),
       ),
+      bottomSheet: _wordleDeHoy.isNotEmpty && !_isLoading
+          ? WordleKeyboard(rows: _keyboardRows, onKeyPressed: _onKeyPressed)
+          : null,
     );
   }
 }
