@@ -178,59 +178,64 @@ class _PocScreenState extends State<PocScreen> {
         centerTitle: true,
         backgroundColor: Colors.teal,
       ),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              if (_isLoading)
-                const CircularProgressIndicator(color: Colors.teal)
-              else if (_wordleDeHoy.isNotEmpty) ...[
-                TextField(
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(fontSize: 28, letterSpacing: 2),
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    hintText: 'Ingresa la palabra',
-                    contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-                  ),
-                  maxLength: 5,
-                  onChanged: (v) => _intento = v,
-                  onSubmitted: (_) => _validarIntento(),
+      body: Column(
+        children: [
+          Expanded(
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.all(24.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    if (_isLoading)
+                      const CircularProgressIndicator(color: Colors.teal)
+                    else if (_wordleDeHoy.isNotEmpty) ...[
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: List.generate(5, (index) {
+                          final letra = index < _intento.length ? _intento[index] : '';
+                          return Container(
+                            width: 56,
+                            height: 56,
+                            margin: const EdgeInsets.symmetric(horizontal: 4),
+                            decoration: BoxDecoration(
+                              border: Border.all(color: Colors.teal, width: 2),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Center(
+                              child: Text(
+                                letra,
+                                style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                          );
+                        }),
+                      ),
+                      const SizedBox(height: 30),
+                      if (_resultado.isNotEmpty)
+                        Text(
+                          _resultado,
+                          style: const TextStyle(fontSize: 48, fontWeight: FontWeight.bold),
+                        ),
+                    ] else
+                      ElevatedButton(
+                        onPressed: _obtenerWordle,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.teal,
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 16),
+                        ),
+                        child: const Text('Obtener palabra del día', style: TextStyle(fontSize: 18)),
+                      ),
+                  ],
                 ),
-                const SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: _validarIntento,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.teal,
-                    foregroundColor: Colors.white,
-                  ),
-                  child: const Text('Validar'),
-                ),
-                const SizedBox(height: 40),
-                if (_resultado.isNotEmpty)
-                  Text(
-                    _resultado,
-                    style: const TextStyle(fontSize: 48, fontWeight: FontWeight.bold),
-                  ),
-              ] else
-                ElevatedButton(
-                  onPressed: _obtenerWordle,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.teal,
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 16),
-                  ),
-                  child: const Text('Obtener palabra del día', style: TextStyle(fontSize: 18)),
-                ),
-            ],
+              ),
+            ),
           ),
-        ),
+          if (_wordleDeHoy.isNotEmpty && !_isLoading)
+            WordleKeyboard(rows: _keyboardRows, onKeyPressed: _onKeyPressed),
+        ],
       ),
-      bottomSheet: _wordleDeHoy.isNotEmpty && !_isLoading
-          ? WordleKeyboard(rows: _keyboardRows, onKeyPressed: _onKeyPressed)
-          : null,
     );
   }
 }
