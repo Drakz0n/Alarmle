@@ -5,6 +5,16 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+// Paleta Wordle unificada
+const wordleGreen = Color(0xFF57AC57);
+const wordleYellow = Color(0xFFC8B652);
+const wordleGray = Color(0xFF939393);
+const wordleDarkBg = Color(0xFF333333);
+const wordleSurface = Color(0xFF1C1C1E);
+const wordleSurfaceLight = Color(0xFF2C2C2E);
+const wordleBorder = Color(0xFF3A3A3C);
+const wordleTextSecondary = Color(0xFF8E8E93);
+
 void main() {
   runApp(
     ChangeNotifierProvider(
@@ -21,7 +31,40 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Alarmle',
-      theme: ThemeData.dark(),
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData.dark().copyWith(
+        scaffoldBackgroundColor: wordleDarkBg,
+        colorScheme: const ColorScheme.dark(
+          primary: wordleGreen,
+          secondary: wordleYellow,
+          surface: wordleDarkBg,
+        ),
+        textTheme: const TextTheme(
+          displayLarge: TextStyle(fontFamily: 'Roboto', fontWeight: FontWeight.w700),
+          displayMedium: TextStyle(fontFamily: 'Roboto', fontWeight: FontWeight.w700),
+          displaySmall: TextStyle(fontFamily: 'Roboto', fontWeight: FontWeight.w700),
+          headlineLarge: TextStyle(fontFamily: 'Roboto', fontWeight: FontWeight.w700),
+          headlineMedium: TextStyle(fontFamily: 'Roboto', fontWeight: FontWeight.w600),
+          headlineSmall: TextStyle(fontFamily: 'Roboto', fontWeight: FontWeight.w600),
+          titleLarge: TextStyle(fontFamily: 'Roboto', fontWeight: FontWeight.w600),
+          titleMedium: TextStyle(fontFamily: 'Roboto', fontWeight: FontWeight.w500),
+          titleSmall: TextStyle(fontFamily: 'Roboto', fontWeight: FontWeight.w500),
+          bodyLarge: TextStyle(fontFamily: 'Roboto', fontWeight: FontWeight.w400),
+          bodyMedium: TextStyle(fontFamily: 'Roboto', fontWeight: FontWeight.w400),
+          bodySmall: TextStyle(fontFamily: 'Roboto', fontWeight: FontWeight.w300),
+          labelLarge: TextStyle(fontFamily: 'Roboto', fontWeight: FontWeight.w500),
+          labelMedium: TextStyle(fontFamily: 'Roboto', fontWeight: FontWeight.w500),
+          labelSmall: TextStyle(fontFamily: 'Roboto', fontWeight: FontWeight.w400),
+        ),
+        floatingActionButtonTheme: const FloatingActionButtonThemeData(
+          backgroundColor: wordleGreen,
+          foregroundColor: Colors.white,
+        ),
+        switchTheme: SwitchThemeData(
+          thumbColor: WidgetStateProperty.all(Colors.white),
+          trackColor: WidgetStateProperty.all(wordleBorder),
+        ),
+      ),
       home: const HomeScreen(),
     );
   }
