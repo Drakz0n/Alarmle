@@ -1,5 +1,10 @@
+import 'dart:async';
+import 'package:alarm/alarm.dart' as alarm_package show Alarm;
+import 'package:alarmle/services/alarm_service.dart';
 import 'package:alarmle/viewmodels/alarm_view_model.dart';
 import 'package:alarmle/screens/home_screen.dart';
+import 'package:alarmle/screens/wordle_alarm_screen.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -15,7 +20,11 @@ const wordleSurfaceLight = Color(0xFF2C2C2E);
 const wordleBorder = Color(0xFF3A3A3C);
 const wordleTextSecondary = Color(0xFF8E8E93);
 
-void main() {
+final GlobalKey<NavigatorState> globalNavigatorKey = GlobalKey<NavigatorState>();
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await AlarmService.init();
   runApp(
     ChangeNotifierProvider(
       create: (_) => AlarmViewModel()..init(),
@@ -24,12 +33,89 @@ void main() {
   );
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
+  StreamSubscription? _alarmSub;
+
+  Future<void> _requestPermissions() async {
+    await Permission.notification.request();
+    final alarmStatus = await Permission.scheduleExactAlarm.status;
+    if (alarmStatus.isDenied) {
+      await Permission.scheduleExactAlarm.request();
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await _requestPermissions();
+      await _checkActiveAlarms();
+    });
+
+    _alarmSub = alarm_package.Alarm.ringStream.stream.listen((alarmSettings) {
+      _navegarAlMinijuego(alarmSettings.id);
+    });
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    _alarmSub?.cancel();
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      _checkActiveAlarms();
+    }
+  }
+
+  Future<void> _checkActiveAlarms() async {
+    final alarms = await alarm_package.Alarm.getAlarms();
+    for (final a in alarms) {
+      if (await alarm_package.Alarm.isRinging(a.id)) {
+        _navegarAlMinijuego(a.id);
+        break;
+      }
+    }
+  }
+
+  void _navegarAlMinijuego(int id) {
+    bool isAlreadyWordle = false;
+
+    globalNavigatorKey.currentState?.popUntil((route) {
+      if (route.settings.name == '/wordle') {
+        isAlreadyWordle = true;
+      }
+      return true;
+    });
+
+    if (!isAlreadyWordle) {
+      globalNavigatorKey.currentState?.pushAndRemoveUntil(
+        MaterialPageRoute(
+          settings: const RouteSettings(name: '/wordle'),
+          builder: (_) => WordleAlarmScreen(alarmId: id),
+          fullscreenDialog: true,
+        ),
+        (route) => false,
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      onGenerateRoute: (settings) => null,
       title: 'Alarmle',
       debugShowCheckedModeBanner: false,
       theme: ThemeData.dark().copyWith(
@@ -66,6 +152,7 @@ class MyApp extends StatelessWidget {
         ),
       ),
       home: const HomeScreen(),
+      navigatorKey: globalNavigatorKey,
     );
   }
 }
@@ -235,8 +322,10 @@ class _WordleCellState extends State<WordleCell> with SingleTickerProviderStateM
 
     Widget cell = Container(
       decoration: BoxDecoration(
-        color: isFliping ? (flipValue < 0.5 ? _displayColor : _displayColor) : _displayColor,
-        border: _showBorder ? Border.all(color: Colors.teal, width: 2) : null,
+        color: _displayColor,
+        border: _showBorder
+            ? Border.all(color: wordleGray, width: 1.5)
+            : null,
         borderRadius: BorderRadius.circular(8),
       ),
       child: Center(
@@ -247,9 +336,7 @@ class _WordleCellState extends State<WordleCell> with SingleTickerProviderStateM
             style: TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.bold,
-              color: (_hasFlipped || _displayColor != Colors.transparent) && _displayColor != Colors.transparent
-                  ? Colors.white
-                  : Colors.black87,
+              color: Colors.white,
             ),
           ),
         ),
@@ -280,329 +367,4 @@ class WordleCell extends StatefulWidget {
 
   @override
   State<WordleCell> createState() => _WordleCellState();
-}
-
-class PocScreen extends StatefulWidget {
-  const PocScreen({super.key});
-
-  @override
-  State<PocScreen> createState() => _PocScreenState();
-}
-
-class _PocScreenState extends State<PocScreen> {
-  String _wordleDeHoy = "";
-  String _intento = "";
-  bool _isLoading = false;
-  int _intentoActual = 0;
-  bool _juegoTerminado = false;
-  bool _animando = false;
-  int _puntajeTotal = 0;
-
-  final List<String> _historial = List.filled(5, "");
-  final List<List<Color?>> _historialColores = List.generate(5, (_) => List.filled(5, null));
-  final Map<String, Color> _keyColors = {};
-  final Map<String, Color> _pendingKeyColors = {};
-
-  late final List<List<WordleKey>> _keyboardRows = _buildKeyboardRows();
-
-  List<List<GlobalKey<_WordleCellState>>> _cellKeys = List.generate(
-    5,
-    (_) => List.generate(5, (_) => GlobalKey<_WordleCellState>()),
-  );
-
-  static List<List<WordleKey>> _buildKeyboardRows() => [
-    [WordleKey('Q'), WordleKey('W'), WordleKey('E'), WordleKey('R'), WordleKey('T'), WordleKey('Y'), WordleKey('U'), WordleKey('I'), WordleKey('O'), WordleKey('P')],
-    const [WordleKey('A'), WordleKey('S'), WordleKey('D'), WordleKey('F'), WordleKey('G'), WordleKey('H'), WordleKey('J'), WordleKey('K'), WordleKey('L')],
-    [WordleKey('ENTER', true), WordleKey('Z'), WordleKey('X'), WordleKey('C'), WordleKey('V'), WordleKey('B'), WordleKey('N'), WordleKey('M'), WordleKey('DEL', true)],
-  ];
-
-  @override
-  void initState() {
-    super.initState();
-    _obtenerWordle();
-  }
-
-  Future<void> _obtenerWordle() async {
-    setState(() {
-      _isLoading = true;
-      _wordleDeHoy = "";
-      _intento = "";
-      _intentoActual = 0;
-      _juegoTerminado = false;
-      _animando = false;
-      for (int i = 0; i < 5; i++) {
-        _historial[i] = "";
-        for (int j = 0; j < 5; j++) _historialColores[i][j] = null;
-      }
-      _keyColors.clear();
-      _pendingKeyColors.clear();
-      _puntajeTotal = 0;
-    });
-    _cellKeys = List.generate(
-      5,
-      (_) => List.generate(5, (_) => GlobalKey<_WordleCellState>()),
-    );
-
-    final fechaHoy = DateTime.now().toString().split(' ')[0];
-    final url = Uri.parse('https://www.nytimes.com/svc/wordle/v2/$fechaHoy.json');
-
-    try {
-      final response = await http.get(url);
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        setState(() => _wordleDeHoy = (data['solution'] ?? "").toString().toUpperCase());
-      } else {
-        setState(() => _wordleDeHoy = "");
-      }
-    } catch (e) {
-      setState(() => _wordleDeHoy = "");
-    } finally {
-      setState(() => _isLoading = false);
-    }
-  }
-
-  void _evaluarIntento() {
-    final intento = _intento.toUpperCase().trim();
-    if (intento.isEmpty || intento.length != _wordleDeHoy.length) return;
-
-    final colors = List<Color?>.filled(5, null);
-    final keyColors = Map<String, Color>.from(_keyColors);
-    final solutionChars = _wordleDeHoy.split('');
-    final guessChars = intento.split('');
-    final used = List<bool>.filled(5, false);
-
-    for (int i = 0; i < 5; i++) {
-      if (guessChars[i] == solutionChars[i]) {
-        colors[i] = const Color(0xFF6AAA64);
-        used[i] = true;
-        keyColors[guessChars[i]] = const Color(0xFF6AAA64);
-      }
-    }
-
-    for (int i = 0; i < 5; i++) {
-      if (colors[i] != null) continue;
-      final letter = guessChars[i];
-      bool found = false;
-      for (int j = 0; j < 5; j++) {
-        if (!used[j] && solutionChars[j] == letter) {
-          used[j] = true;
-          found = true;
-          break;
-        }
-      }
-      if (found) {
-        colors[i] = const Color(0xFFC9B458);
-        if ((keyColors[letter] ?? const Color(0xFFD3D3D3)) != const Color(0xFF6AAA64)) {
-          keyColors[letter] = const Color(0xFFC9B458);
-        }
-      } else {
-        colors[i] = const Color(0xFF787C7E);
-        keyColors[letter] = const Color(0xFF787C7E);
-      }
-    }
-
-    final greenCount = colors.where((c) => c == const Color(0xFF6AAA64)).length;
-    final yellowCount = colors.where((c) => c == const Color(0xFFC9B458)).length;
-    const greenPoints = [50, 40, 30, 20, 10];
-    const yellowPoints = [10, 8, 6, 4, 2];
-    final rowScore = greenCount * greenPoints[_intentoActual] + yellowCount * yellowPoints[_intentoActual];
-    final allGreen = colors.every((c) => c == const Color(0xFF6AAA64));
-
-    _pendingKeyColors
-      ..clear()
-      ..addAll(keyColors);
-
-    setState(() {
-      _historial[_intentoActual] = intento;
-      _animando = true;
-      _puntajeTotal += rowScore;
-    });
-
-    _revelarFilas(colors, allGreen, rowScore);
-  }
-
-  Future<void> _revelarFilas(List<Color?> colors, bool allGreen, int rowScore) async {
-    for (int i = 0; i < 5; i++) {
-      final cellState = _cellKeys[_intentoActual][i].currentState;
-      if (cellState != null) {
-        await cellState.triggerFlip(colors[i] ?? const Color(0xFF787C7E));
-      }
-      if (i < 4) await Future.delayed(const Duration(milliseconds: 100));
-    }
-
-    setState(() {
-      _historialColores[_intentoActual] = colors;
-      _keyColors
-        ..clear()
-        ..addAll(_pendingKeyColors);
-    });
-
-    if (allGreen || _intentoActual >= 4) {
-      setState(() {
-        if (!allGreen) _puntajeTotal = 0;
-        _juegoTerminado = true;
-        _animando = false;
-      });
-    } else {
-      setState(() {
-        _intentoActual = _intentoActual + 1;
-        _intento = "";
-        _animando = false;
-      });
-    }
-  }
-
-  void _onKeyPressed(WordleKey key) {
-    if (_juegoTerminado || _animando) return;
-
-    final label = key.label;
-    if (label == 'DEL') {
-      setState(() {
-        if (_intento.isNotEmpty) _intento = _intento.substring(0, _intento.length - 1);
-      });
-      return;
-    }
-    if (label == 'ENTER') {
-      _evaluarIntento();
-      return;
-    }
-    setState(() {
-      if (_intento.length < 5) {
-        _intento += label;
-        final idx = _intento.length - 1;
-        _cellKeys[_intentoActual][idx].currentState?.triggerPop();
-      }
-    });
-  }
-
-  void _reiniciar() => _obtenerWordle();
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            final maxH = constraints.maxHeight;
-            final maxW = constraints.maxWidth;
-            return SingleChildScrollView(
-              child: ConstrainedBox(
-                constraints: BoxConstraints(minHeight: maxH, maxHeight: maxH, maxWidth: maxW),
-                child: IntrinsicHeight(
-                  child: Column(
-                    children: [
-                      Expanded(
-                        child: Center(
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                if (_isLoading)
-                                  const CircularProgressIndicator(color: Colors.teal)
-                                else if (_wordleDeHoy.isNotEmpty) ...[
-                                  Column(
-                                    children: List.generate(5, (rowIndex) {
-                                      final isCurrentRow = rowIndex == _intentoActual;
-                                      final isPastRow = rowIndex < _intentoActual;
-                                      final showIntento = isCurrentRow && !_animando;
-                                      final letras = _historial[rowIndex].isNotEmpty
-                                          ? _historial[rowIndex].split('')
-                                          : (showIntento ? _intento.split('') : List.filled(5, ''));
-                                      final cols = isPastRow
-                                          ? (_historialColores[rowIndex])
-                                          : (isCurrentRow ? List.filled(5, null) : List.filled(5, null));
-                                      return Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: List.generate(5, (colIndex) {
-                                          final letra = colIndex < letras.length ? letras[colIndex] : '';
-                                          final bg = cols[colIndex];
-                                          final isRevealed = isPastRow;
-                                          return Expanded(
-                                            child: Padding(
-                                              padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 3),
-                                              child: AspectRatio(
-                                                aspectRatio: 1,
-                                                child: isRevealed
-                                                    ? Container(
-                                                        decoration: BoxDecoration(
-                                                          color: bg,
-                                                          borderRadius: BorderRadius.circular(8),
-                                                        ),
-                                                        child: Center(
-                                                          child: Text(
-                                                            letra,
-                                                            style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
-                                                          ),
-                                                        ),
-                                                      )
-                                                    : WordleCell(
-                                                        key: _cellKeys[rowIndex][colIndex],
-                                                        letter: letra,
-                                                        backgroundColor: null,
-                                                      ),
-                                              ),
-                                            ),
-                                          );
-                                        }),
-                                      );
-                                    }),
-                                  ),
-                                  const SizedBox(height: 8),
-                                  if (_juegoTerminado) ...[
-                                    Text(
-                                      _historialColores[_intentoActual].every((c) => c == const Color(0xFF6AAA64)) && _wordleDeHoy.isNotEmpty
-                                          ? "GANASTE"
-                                          : "PERDISTE",
-                                      style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
-                                    ),
-                                    const SizedBox(height: 6),
-                                    if (!(_historialColores[_intentoActual].every((c) => c == const Color(0xFF6AAA64))) && _wordleDeHoy.isNotEmpty)
-                                      Text("Palabra: $_wordleDeHoy", style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
-                                  ],
-                                  const SizedBox(height: 8),
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                                    decoration: BoxDecoration(color: const Color(0xFFF0F0F0), borderRadius: BorderRadius.circular(10)),
-                                    child: Text(
-                                      "PUNTAJE: $_puntajeTotal PTS",
-                                      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, letterSpacing: 1.2),
-                                    ),
-                                  ),
-                                  if (_juegoTerminado) ...[
-                                    const SizedBox(height: 12),
-                                    ElevatedButton(
-                                      onPressed: _reiniciar,
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors.teal,
-                                        foregroundColor: Colors.white,
-                                        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                                      ),
-                                      child: const Text('Reiniciar Juego', style: TextStyle(fontSize: 16)),
-                                    ),
-                                  ],
-                                ] else
-                                  const SizedBox.shrink(),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                      if (_wordleDeHoy.isNotEmpty && !_isLoading)
-                        WordleKeyboard(
-                          rows: _keyboardRows,
-                          onKeyPressed: _onKeyPressed,
-                          keyColors: _keyColors,
-                          enabled: !_juegoTerminado && !_animando,
-                        ),
-                    ],
-                  ),
-                ),
-              ),
-            );
-          },
-        ),
-      ),
-    );
-  }
 }
