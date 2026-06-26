@@ -1,4 +1,5 @@
 import 'package:alarmle/services/core/storage_service.dart';
+import 'package:alarmle/services/alarm_service.dart';
 import 'package:alarmle/models/alarm_model.dart';
 import 'package:flutter/material.dart';
 
@@ -27,14 +28,30 @@ class AlarmViewModel extends ChangeNotifier
       return aMinutes.compareTo(bMinutes);
     });
     await _storage.saveAlarms(_alarms);
+    if (alarm.isEnabled) {
+      final now = DateTime.now();
+      final trigger = DateTime(now.year, now.month, now.day, alarm.hour, alarm.minute);
+      await AlarmService().schedule(alarm, trigger);
+    }
     notifyListeners();
   }
 
-  Future<void> toggleAlarm(String id, bool value) async 
+  Future<void> toggleAlarm(String id, bool value) async
   {
     final index = _alarms.indexWhere((a) => a.id == id);
     if (index == -1) return;
     _alarms[index].isEnabled = value;
+
+    final alarm = _alarms[index];
+    final now = DateTime.now();
+    final trigger = DateTime(now.year, now.month, now.day, alarm.hour, alarm.minute);
+
+    if (value) {
+      await AlarmService().schedule(alarm, trigger);
+    } else {
+      await AlarmService().cancel(alarm.id.hashCode);
+    }
+
     await _storage.saveAlarms(_alarms);
     notifyListeners();
   }
@@ -42,6 +59,7 @@ class AlarmViewModel extends ChangeNotifier
   Future<void> deleteAlarm(String id) async 
   {
     _alarms.removeWhere((a) => a.id == id);
+    await AlarmService().cancel(id.hashCode);
     await _storage.saveAlarms(_alarms);
     notifyListeners();
   }
@@ -53,10 +71,16 @@ class AlarmViewModel extends ChangeNotifier
     _alarms[index] = alarm;
     _alarms.sort((a, b) => (a.hour * 60 + a.minute).compareTo(b.hour * 60 + b.minute));
     await _storage.saveAlarms(_alarms);
+    await AlarmService().cancel(alarm.id.hashCode);
+    if (alarm.isEnabled) {
+      final now = DateTime.now();
+      final trigger = DateTime(now.year, now.month, now.day, alarm.hour, alarm.minute);
+      await AlarmService().schedule(alarm, trigger);
+    }
     notifyListeners();
   }
 
-  String get nextAlarmText 
+  String get nextAlarmText
   {
     final enabled = _alarms.where((a) => a.isEnabled).toList();
     if (enabled.isEmpty) return "Sin alarmas activas";
