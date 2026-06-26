@@ -37,6 +37,8 @@ dependencies:
   provider: ^6.1.2
   shared_preferences: ^2.3.3
   http: ^1.6.0
+  alarm: ^4.0.0
+  permission_handler: ^11.3.1
 
 dev_dependencies:
   flutter_test:
@@ -64,6 +66,7 @@ flutter:
     - assets/images/aqui_iran_imagenes.txt
     - assets/fonts/aqui_iran_fuentes.txt
     - assets/icons/aqui_iran_iconos.txt
+    - assets/sounds/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
