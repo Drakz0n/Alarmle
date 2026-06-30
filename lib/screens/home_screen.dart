@@ -1,10 +1,12 @@
+import 'package:alarmle/screens/profile_screen.dart';
 import 'package:alarmle/viewmodels/alarm_view_model.dart';
 import 'package:alarmle/widgets/edit_alarm_sheet.dart';
 import 'package:alarmle/widgets/add_alarm_sheet.dart';
 import 'package:alarmle/models/alarm_model.dart';
 import 'package:alarmle/widgets/alarm_card.dart';
-import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter/material.dart';
+
 
 const _wordleGreen = Color(0xFF57AC57);
 const _wordleYellow = Color(0xFFC8B652);
@@ -169,6 +171,17 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             const Divider(color: _wordleBorder),
             const SizedBox(height: 8),
+            _buildDrawerItem(
+              icon: Icons.person_outline,
+              label: "Perfil",
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const ProfileScreen()),
+                );
+              },
+            ),
             _buildDrawerItem(
               icon: Icons.alarm,
               label: "Alarmas",
