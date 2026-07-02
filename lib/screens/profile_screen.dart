@@ -95,7 +95,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     Stack(
                       children: [
                         GestureDetector(
-                          onTap: () => vm.pickPhoto(),
+                          onTap: vm.isConnected ? () => vm.pickPhoto() : null,
                           child: CircleAvatar(
                             radius: 48,
                             backgroundColor: wordleSurfaceLight,
@@ -106,25 +106,55 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 : null,
                           ),
                         ),
-                        Positioned(
-                          bottom: 0, right: 0,
-                          child: GestureDetector(
-                            onTap: () => vm.pickPhoto(),
-                            child: Container(
-                              padding: const EdgeInsets.all(6),
-                              decoration: BoxDecoration(
-                                color: wordleGreen,
-                                shape: BoxShape.circle,
-                                border: Border.all(color: wordleDarkBg, width: 2),
+                        if (vm.isConnected)
+                          Positioned(
+                            bottom: 0, right: 0,
+                            child: GestureDetector(
+                              onTap: () => vm.pickPhoto(),
+                              child: Container(
+                                padding: const EdgeInsets.all(6),
+                                decoration: BoxDecoration(
+                                  color: wordleGreen,
+                                  shape: BoxShape.circle,
+                                  border: Border.all(color: wordleDarkBg, width: 2),
+                                ),
+                                child: const Icon(Icons.camera_alt,
+                                    size: 14, color: Colors.white),
                               ),
-                              child: const Icon(Icons.camera_alt,
-                                  size: 14, color: Colors.white),
                             ),
                           ),
-                        ),
                       ],
                     ),
                     const SizedBox(height: 14),
+
+                    if (!vm.isConnected) ...[
+                      Container(
+                        margin: const EdgeInsets.only(bottom: 12),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 10),
+                        decoration: BoxDecoration(
+                          color: Colors.red.withValues(alpha: 0.15),
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(
+                              color: Colors.red.withValues(alpha: 0.3)),
+                        ),
+                        child: const Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.wifi_off, color: Colors.red, size: 18),
+                            SizedBox(width: 8),
+                            Text(
+                              'Sin conexión a internet',
+                              style: TextStyle(
+                                color: Colors.red,
+                                fontSize: 13,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
 
                     if (_editingName)
                       Row(
@@ -170,12 +200,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 fontSize: 20,
                                 fontWeight: FontWeight.w600),
                           ),
-                          const SizedBox(width: 8),
-                          GestureDetector(
-                            onTap: () => setState(() => _editingName = true),
-                            child: Icon(Icons.edit,
-                                size: 16, color: wordleTextSecondary),
-                          ),
+                          if (vm.isConnected) ...[
+                            const SizedBox(width: 8),
+                            GestureDetector(
+                              onTap: () => setState(() => _editingName = true),
+                              child: Icon(Icons.edit,
+                                  size: 16, color: wordleTextSecondary),
+                            ),
+                          ],
                         ],
                       ),
 
@@ -243,6 +275,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
               const SizedBox(height: 24),
 
+              if (vm.isConnected)
               _buildSection(
                 title: 'Cuenta',
                 child: Container(

@@ -1,6 +1,7 @@
 import 'package:alarmle/screens/leaderboard_screen.dart';
 import 'package:alarmle/screens/profile_screen.dart';
 import 'package:alarmle/viewmodels/alarm_view_model.dart';
+import 'package:alarmle/viewmodels/user_view_model.dart';
 import 'package:alarmle/widgets/edit_alarm_sheet.dart';
 import 'package:alarmle/widgets/add_alarm_sheet.dart';
 import 'package:alarmle/models/alarm_model.dart';
@@ -160,6 +161,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildDrawer() {
+    final isConnected = context.watch<UserViewModel>().isConnected;
     return Drawer(
       backgroundColor: _wordleSurface,
       child: SafeArea(
@@ -192,13 +194,17 @@ class _HomeScreenState extends State<HomeScreen> {
             _buildDrawerItem(
               icon: Icons.emoji_events_outlined,
               label: "Ranking",
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => const LeaderboardScreen()),
-                );
-              },
+              enabled: isConnected,
+              onTap: isConnected
+                  ? () {
+                      Navigator.pop(context);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (_) => const LeaderboardScreen()),
+                      );
+                    }
+                  : null,
             ),
             _buildDrawerItem(
               icon: Icons.settings_outlined,
@@ -236,19 +242,27 @@ class _HomeScreenState extends State<HomeScreen> {
     required IconData icon,
     required String label,
     bool selected = false,
-    required VoidCallback onTap,
+    bool enabled = true,
+    required VoidCallback? onTap,
   }) {
+    final iconColor = !enabled
+        ? const Color(0xFF636366)
+        : selected
+            ? _wordleGreen
+            : _wordleTextSecondary;
+    final textColor = !enabled
+        ? const Color(0xFF636366)
+        : selected
+            ? _wordleGreen
+            : Colors.white;
+
     return ListTile(
       onTap: onTap,
-      leading: Icon(
-        icon,
-        color: selected ? _wordleGreen : _wordleTextSecondary,
-        size: 22,
-      ),
+      leading: Icon(icon, color: iconColor, size: 22),
       title: Text(
         label,
         style: TextStyle(
-          color: selected ? _wordleGreen : Colors.white,
+          color: textColor,
           fontSize: 16,
           fontWeight: selected ? FontWeight.w600 : FontWeight.w400,
         ),
