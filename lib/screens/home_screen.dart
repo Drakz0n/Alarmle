@@ -1,3 +1,4 @@
+import 'package:alarmle/screens/leaderboard_screen.dart';
 import 'package:alarmle/screens/profile_screen.dart';
 import 'package:alarmle/viewmodels/alarm_view_model.dart';
 import 'package:alarmle/widgets/edit_alarm_sheet.dart';
@@ -187,6 +188,17 @@ class _HomeScreenState extends State<HomeScreen> {
               label: "Alarmas",
               selected: true,
               onTap: () => Navigator.pop(context),
+            ),
+            _buildDrawerItem(
+              icon: Icons.emoji_events_outlined,
+              label: "Ranking",
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const LeaderboardScreen()),
+                );
+              },
             ),
             _buildDrawerItem(
               icon: Icons.settings_outlined,

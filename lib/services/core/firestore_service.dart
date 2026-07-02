@@ -35,4 +35,17 @@ class FirestoreService
   {
     await _db.collection(_collection).doc(uid).update({'score': score});
   }
+
+  //obtener top 10 usuarios con mayor puntaje
+  Future<List<UserModel>> getLeaderboard() async 
+  {
+    final snapshot = await _db.collection(_collection)
+        .orderBy('score', descending: true)
+        .limit(10)
+        .get();
+
+    return snapshot.docs
+        .map((doc) => UserModel.fromFirestore(doc.data(), null))
+        .toList();
+  }
 }

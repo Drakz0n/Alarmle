@@ -7,7 +7,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:alarmle/models/user_model.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
-import 'dart:io';
 
 class UserViewModel extends ChangeNotifier 
 {
@@ -19,6 +18,8 @@ class UserViewModel extends ChangeNotifier
   bool _isConnected = false;
   bool _hasPendingSync = false;
   bool _isLoading = false;
+  List<UserModel> _leaderboard = [];
+  bool _isLeaderboardLoading = false;
 
   UserModel? get user => _user;
   bool get isConnected => _isConnected;
@@ -26,6 +27,8 @@ class UserViewModel extends ChangeNotifier
   bool get isGuest => _user?.uid == 'guest';
   bool get isLoading => _isLoading;
   String? get googlePhotoUrl => _auth.googlePhotoUrl;
+  List<UserModel> get leaderboard => _leaderboard;
+  bool get isLeaderboardLoading => _isLeaderboardLoading;
 
   Future<void> init() async 
   {
@@ -274,6 +277,25 @@ class UserViewModel extends ChangeNotifier
     _user!.photoPath = picked.path;
     await _saveToLocal(pendingSync: _hasPendingSync);
     notifyListeners();
+  }
+
+  //obtener tabla de clasificaciones
+  Future<void> fetchLeaderboard() async 
+  {
+    _isLeaderboardLoading = true;
+    notifyListeners();
+
+    try 
+    {
+      _leaderboard = await _firestore.getLeaderboard();
+    } catch (e) 
+    {
+      _leaderboard = [];
+    } finally 
+    {
+      _isLeaderboardLoading = false;
+      notifyListeners();
+    }
   }
 
   //codigos de error
