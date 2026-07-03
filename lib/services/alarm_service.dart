@@ -16,11 +16,14 @@ class AlarmService {
       triggerTime = triggerTime.add(const Duration(days: 1));
     }
 
-    // Resolver la ruta del asset de audio desde el campo ringtone del modelo
+    // Resolver la ruta del audio: si es ruta absoluta (custom), usar directo;
+    // si no, prefijar con assets/sounds/ (ringtones embebidos).
     final ringtone = alarmModel.ringtone.isEmpty || alarmModel.ringtone == 'default'
         ? 'alarm_tone.wav'
         : alarmModel.ringtone;
-    final assetPath = 'assets/sounds/$ringtone';
+    final assetPath = ringtone.startsWith('/')
+        ? ringtone
+        : 'assets/sounds/$ringtone';
 
     final settings = alarm_pkg.AlarmSettings(
       id: alarmModel.id.hashCode,

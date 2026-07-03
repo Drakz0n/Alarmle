@@ -1,5 +1,8 @@
+import 'dart:io';
 import 'package:alarmle/models/alarm_model.dart';
 import 'package:alarmle/l10n/app_localizations.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:flutter/material.dart';
 
 const _wordleGreen = Color(0xFF57AC57);
@@ -138,6 +141,39 @@ class _AddAlarmSheetState extends State<AddAlarmSheet> {
     Navigator.pop(context);
   }
 
+  /// Obtiene la etiqueta legible para el ringtone actual.
+  String _ringtoneLabel() {
+    if (_availableRingtones.containsKey(_ringtone)) {
+      return _availableRingtones[_ringtone]!;
+    }
+    // Es una ruta de archivo personalizado: mostrar solo el nombre del archivo.
+    return _ringtone.split(Platform.pathSeparator).last;
+  }
+
+  Future<void> _pickCustomRingtone() async {
+    final result = await FilePicker.platform.pickFiles(
+      type: FileType.audio,
+      allowMultiple: false,
+    );
+
+    if (result == null || result.files.isEmpty) return;
+
+    final pickedFile = result.files.first;
+    if (pickedFile.path == null) return;
+
+    // Copiar el archivo al directorio persistente de la app.
+    final appDir = await getApplicationDocumentsDirectory();
+    final soundsDir = Directory('${appDir.path}/sounds');
+    if (!await soundsDir.exists()) {
+      await soundsDir.create(recursive: true);
+    }
+
+    final destPath = '${soundsDir.path}/${pickedFile.name}';
+    await File(pickedFile.path!).copy(destPath);
+
+    setState(() => _ringtone = destPath);
+  }
+
   Future<void> _selectRingtone() async {
     final selected = await showDialog<String>(
       context: context,
@@ -147,29 +183,58 @@ class _AddAlarmSheetState extends State<AddAlarmSheet> {
           'Select Ringtone',
           style: const TextStyle(color: _wordleTextPrimary),
         ),
-        children: _availableRingtones.entries.map((entry) {
-          final isSelected = entry.key == _ringtone;
-          return SimpleDialogOption(
-            onPressed: () => Navigator.pop(context, entry.key),
+        children: [
+          // Ringtones predefinidos
+          ..._availableRingtones.entries.map((entry) {
+            final isSelected = entry.key == _ringtone;
+            return SimpleDialogOption(
+              onPressed: () => Navigator.pop(context, entry.key),
+              child: Row(
+                children: [
+                  Icon(
+                    isSelected ? Icons.radio_button_checked : Icons.radio_button_unchecked,
+                    color: isSelected ? _wordleGreen : _wordleTextSecondary,
+                    size: 20,
+                  ),
+                  const SizedBox(width: 12),
+                  Text(
+                    entry.value,
+                    style: TextStyle(
+                      color: isSelected ? _wordleGreen : _wordleTextPrimary,
+                      fontSize: 15,
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }),
+          // Opción de tono personalizado
+          const Divider(color: _wordleBorder),
+          SimpleDialogOption(
+            onPressed: () {
+              Navigator.pop(context);
+              _pickCustomRingtone();
+            },
             child: Row(
               children: [
-                Icon(
-                  isSelected ? Icons.radio_button_checked : Icons.radio_button_unchecked,
-                  color: isSelected ? _wordleGreen : _wordleTextSecondary,
+                const Icon(
+                  Icons.add_circle_outline,
+                  color: _wordleGreen,
                   size: 20,
                 ),
                 const SizedBox(width: 12),
                 Text(
-                  entry.value,
+                  'Add custom tone...',
                   style: TextStyle(
-                    color: isSelected ? _wordleGreen : _wordleTextPrimary,
+                    color: _wordleGreen,
                     fontSize: 15,
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
               ],
             ),
-          );
-        }).toList(),
+          ),
+        ],
       ),
     );
 
@@ -507,7 +572,7 @@ class _AddAlarmSheetState extends State<AddAlarmSheet> {
                 _buildOptionRow(
                   icon: Icons.music_note_outlined,
                   title: l10n.ringtoneSetting,
-                  subtitle: _availableRingtones[_ringtone] ?? l10n.defaultAlarmSound,
+                  subtitle: _ringtoneLabel(),
                   onTap: _selectRingtone,
                 ),
                 Divider(height: 1, color: _wordleBorder),

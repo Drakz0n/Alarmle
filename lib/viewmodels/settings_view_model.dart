@@ -5,13 +5,11 @@ class SettingsViewModel extends ChangeNotifier
 {
   final StorageService _storage = StorageService();
 
-  String _defaultRingtone = 'Default';
   int _defaultSnoozeMinutes = 5;
   double _appVolume = 0.8;
   Locale? _currentLocale;
   bool _isLoading = false;
 
-  String get defaultRingtone => _defaultRingtone;
   int get defaultSnoozeMinutes => _defaultSnoozeMinutes;
   double get appVolume => _appVolume;
   Locale? get currentLocale => _currentLocale;
@@ -23,7 +21,6 @@ class SettingsViewModel extends ChangeNotifier
     notifyListeners();
 
     final settings = await _storage.loadSettings();
-    _defaultRingtone = settings['defaultRingtone'] as String;
     _defaultSnoozeMinutes = settings['defaultSnoozeMinutes'] as int;
     _appVolume = settings['appVolume'] as double;
 
@@ -35,13 +32,6 @@ class SettingsViewModel extends ChangeNotifier
     }
 
     _isLoading = false;
-    notifyListeners();
-  }
-
-  Future<void> updateRingtone(String value) async 
-  {
-    _defaultRingtone = value;
-    await _storage.saveRingtone(value);
     notifyListeners();
   }
 

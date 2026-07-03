@@ -13,8 +13,6 @@ const _wordleBorder = Color(0xFF3A3A3C);
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
 
-  static const _ringtones = ['Default', 'Alarm', 'Beep', 'Marimba', 'Ring'];
-
   static const _locales = [
     Locale('es'),
     Locale('en'),
@@ -54,36 +52,6 @@ class SettingsScreen extends StatelessWidget {
           : ListView(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
               children: [
-                // ─── Tono por defecto ───
-                _SectionLabel(l10n.ringtoneLabel),
-                const SizedBox(height: 8),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  decoration: BoxDecoration(
-                    color: _wordleSurface,
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: _wordleBorder),
-                  ),
-                  child: DropdownButtonHideUnderline(
-                    child: DropdownButton<String>(
-                      value: vm.defaultRingtone,
-                      dropdownColor: _wordleSurface,
-                      icon: const Icon(Icons.arrow_drop_down, color: _wordleGreen),
-                      style: const TextStyle(color: Colors.white, fontSize: 16),
-                      items: _ringtones
-                          .map((r) => DropdownMenuItem(
-                                value: r,
-                                child: Text(r),
-                              ))
-                          .toList(),
-                      onChanged: (value) {
-                        if (value != null) vm.updateRingtone(value);
-                      },
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 32),
-
                 // ─── Minutos de snooze ───
                 _SectionLabel(l10n.snoozeLabel),
                 const SizedBox(height: 4),

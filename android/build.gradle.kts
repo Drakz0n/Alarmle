@@ -16,6 +16,12 @@ subprojects {
     project.layout.buildDirectory.value(newSubprojectBuildDir)
 }
 subprojects {
+    // Forzar compileSdk 36 en todos los plugins que usen Android Library
+    plugins.withId("com.android.library") {
+        configure<com.android.build.gradle.LibraryExtension> {
+            compileSdk = 36
+        }
+    }
     project.evaluationDependsOn(":app")
 }
 
