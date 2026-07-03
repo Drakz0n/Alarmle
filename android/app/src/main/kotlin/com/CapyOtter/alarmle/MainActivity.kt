@@ -1,4 +1,4 @@
-package com.example.alarmle
+package com.CapyOtter.alarmle
 
 import io.flutter.embedding.android.FlutterActivity
 

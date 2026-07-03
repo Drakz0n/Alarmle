@@ -64,7 +64,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '254860124463',
     projectId: 'alarmle',
     storageBucket: 'alarmle.firebasestorage.app',
-    iosBundleId: 'com.example.alarmle',
+    iosBundleId: 'com.CapyOtter.alarmle',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
@@ -73,7 +73,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '254860124463',
     projectId: 'alarmle',
     storageBucket: 'alarmle.firebasestorage.app',
-    iosBundleId: 'com.example.alarmle',
+    iosBundleId: 'com.CapyOtter.alarmle',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
