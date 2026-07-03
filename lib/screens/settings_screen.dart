@@ -14,6 +14,22 @@ class SettingsScreen extends StatelessWidget {
 
   static const _ringtones = ['Default', 'Alarm', 'Beep', 'Marimba', 'Ring'];
 
+  static const _locales = [
+    Locale('es'),
+    Locale('en'),
+    Locale('pt'),
+    Locale('fr'),
+    Locale('zh'),
+  ];
+
+  static const _localeLabels = {
+    'es': 'Español',
+    'en': 'Inglés',
+    'pt': 'Portugués',
+    'fr': 'Francés',
+    'zh': 'Mandarín',
+  };
+
   @override
   Widget build(BuildContext context) {
     final vm = context.watch<SettingsViewModel>();
@@ -101,6 +117,38 @@ class SettingsScreen extends StatelessWidget {
                   inactiveColor: _wordleBorder,
                   label: '${(vm.appVolume * 100).round()}%',
                   onChanged: (value) => vm.updateVolume(value),
+                ),
+                const SizedBox(height: 32),
+
+                // ─── Idioma ───
+                _SectionLabel('Idioma'),
+                const SizedBox(height: 8),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  decoration: BoxDecoration(
+                    color: _wordleSurface,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: _wordleBorder),
+                  ),
+                  child: DropdownButtonHideUnderline(
+                    child: DropdownButton<Locale>(
+                      value: vm.currentLocale ?? _locales.first,
+                      dropdownColor: _wordleSurface,
+                      icon: const Icon(Icons.arrow_drop_down, color: _wordleGreen),
+                      style: const TextStyle(color: Colors.white, fontSize: 16),
+                      items: _locales
+                          .map((l) => DropdownMenuItem(
+                                value: l,
+                                child: Text(_localeLabels[l.languageCode] ?? l.languageCode),
+                              ))
+                          .toList(),
+                      onChanged: (locale) {
+                        if (locale != null) {
+                          context.read<SettingsViewModel>().changeLocale(locale);
+                        }
+                      },
+                    ),
+                  ),
                 ),
               ],
             ),

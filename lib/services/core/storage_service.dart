@@ -10,6 +10,7 @@ class StorageService
   static const _keyRingtone = 'settings_ringtone';
   static const _keySnooze = 'settings_snooze';
   static const _keyVolume = 'settings_volume';
+  static const _keyLocale = 'settings_locale';
 
   Future<void> saveAlarms(List<Alarm> alarms) async 
   {
@@ -57,5 +58,19 @@ class StorageService
   {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setDouble(_keyVolume, value);
+  }
+
+  // ─── Locale ───
+
+  Future<String?> loadLocale() async 
+  {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString(_keyLocale);
+  }
+
+  Future<void> saveLocale(String languageCode) async 
+  {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_keyLocale, languageCode);
   }
 }

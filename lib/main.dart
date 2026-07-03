@@ -126,11 +126,13 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
+    final settingsVm = context.watch<SettingsViewModel>();
     return MaterialApp(
       onGenerateRoute: (settings) => null,
       onGenerateTitle: (context) => AppLocalizations.of(context)!.homeTitle,
       title: 'Alarmle',
       debugShowCheckedModeBanner: false,
+      locale: settingsVm.currentLocale,
       localizationsDelegates: const [
         AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
