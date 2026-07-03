@@ -2,5 +2,30 @@
   "@@locale": "en",
   "homeTitle": "Home",
   "profileTab": "Profile",
-  "leaderboardTab": "Leaderboard"
+  "leaderboardTab": "Leaderboard",
+  "settingsTitle": "Settings",
+  "ringtoneLabel": "Default ringtone",
+  "snoozeLabel": "Snooze minutes",
+  "volumeLabel": "App volume",
+  "languageLabel": "Language",
+  "profileLabel": "Profile",
+  "alarmsLabel": "Alarms",
+  "rankingLabel": "Ranking",
+  "settingsLabel": "Settings",
+  "aboutLabel": "About",
+  "noAlarms": "No alarms",
+  "addAlarmHint": "Tap + to add one",
+  "cancel": "Cancel",
+  "delete": "Delete",
+  "selectAll": "Select all",
+  "deselectAll": "Deselect all",
+  "selectedCount": "{count} selected",
+  "@selectedCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "version": "Version 1.0.0"
 }

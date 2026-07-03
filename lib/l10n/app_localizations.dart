@@ -70,8 +70,8 @@ abstract class AppLocalizations {
 
   final String localeName;
 
-  static AppLocalizations? of(BuildContext context) {
-    return Localizations.of<AppLocalizations>(context, AppLocalizations);
+  static AppLocalizations of(BuildContext context) {
+    return Localizations.of<AppLocalizations>(context, AppLocalizations)!;
   }
 
   static const LocalizationsDelegate<AppLocalizations> delegate =
@@ -121,6 +121,114 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Leaderboard'**
   String get leaderboardTab;
+
+  /// No description provided for @settingsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get settingsTitle;
+
+  /// No description provided for @ringtoneLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Default ringtone'**
+  String get ringtoneLabel;
+
+  /// No description provided for @snoozeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Snooze minutes'**
+  String get snoozeLabel;
+
+  /// No description provided for @volumeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'App volume'**
+  String get volumeLabel;
+
+  /// No description provided for @languageLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get languageLabel;
+
+  /// No description provided for @profileLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile'**
+  String get profileLabel;
+
+  /// No description provided for @alarmsLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Alarms'**
+  String get alarmsLabel;
+
+  /// No description provided for @rankingLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Ranking'**
+  String get rankingLabel;
+
+  /// No description provided for @settingsLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get settingsLabel;
+
+  /// No description provided for @aboutLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'About'**
+  String get aboutLabel;
+
+  /// No description provided for @noAlarms.
+  ///
+  /// In en, this message translates to:
+  /// **'No alarms'**
+  String get noAlarms;
+
+  /// No description provided for @addAlarmHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap + to add one'**
+  String get addAlarmHint;
+
+  /// No description provided for @cancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancel;
+
+  /// No description provided for @delete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get delete;
+
+  /// No description provided for @selectAll.
+  ///
+  /// In en, this message translates to:
+  /// **'Select all'**
+  String get selectAll;
+
+  /// No description provided for @deselectAll.
+  ///
+  /// In en, this message translates to:
+  /// **'Deselect all'**
+  String get deselectAll;
+
+  /// No description provided for @selectedCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} selected'**
+  String selectedCount(int count);
+
+  /// No description provided for @version.
+  ///
+  /// In en, this message translates to:
+  /// **'Version 1.0.0'**
+  String get version;
 }
 
 class _AppLocalizationsDelegate

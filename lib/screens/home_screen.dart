@@ -7,6 +7,7 @@ import 'package:alarmle/widgets/edit_alarm_sheet.dart';
 import 'package:alarmle/widgets/add_alarm_sheet.dart';
 import 'package:alarmle/models/alarm_model.dart';
 import 'package:alarmle/widgets/alarm_card.dart';
+import 'package:alarmle/l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 
@@ -163,6 +164,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildDrawer() {
     final isConnected = context.watch<UserViewModel>().isConnected;
+    final l10n = AppLocalizations.of(context);
     return Drawer(
       backgroundColor: _wordleSurface,
       child: SafeArea(
@@ -177,7 +179,7 @@ class _HomeScreenState extends State<HomeScreen> {
             const SizedBox(height: 8),
             _buildDrawerItem(
               icon: Icons.person_outline,
-              label: "Perfil",
+              label: l10n.profileLabel,
               onTap: () {
                 Navigator.pop(context);
                 Navigator.push(
@@ -188,13 +190,13 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             _buildDrawerItem(
               icon: Icons.alarm,
-              label: "Alarmas",
+              label: l10n.alarmsLabel,
               selected: true,
               onTap: () => Navigator.pop(context),
             ),
             _buildDrawerItem(
               icon: Icons.emoji_events_outlined,
-              label: "Ranking",
+              label: l10n.rankingLabel,
               enabled: isConnected,
               onTap: isConnected
                   ? () {
@@ -209,7 +211,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             _buildDrawerItem(
               icon: Icons.settings_outlined,
-              label: "Configuración",
+              label: l10n.settingsLabel,
               onTap: () {
                 Navigator.pop(context);
                 Navigator.push(
@@ -220,7 +222,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             _buildDrawerItem(
               icon: Icons.info_outline,
-              label: "Acerca de",
+              label: l10n.aboutLabel,
               onTap: () {
                 Navigator.pop(context);
               },
@@ -229,9 +231,9 @@ class _HomeScreenState extends State<HomeScreen> {
             const Divider(color: _wordleBorder),
             Padding(
               padding: const EdgeInsets.fromLTRB(24, 8, 24, 16),
-              child: const Text(
-                "Versión 1.0.0",
-                style: TextStyle(
+              child: Text(
+                l10n.version,
+                style: const TextStyle(
                   color: Color(0xFF636366),
                   fontSize: 12,
                 ),
@@ -282,6 +284,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final vm = context.watch<AlarmViewModel>();
+    final l10n = AppLocalizations.of(context);
     final alarms = vm.alarms;
     final allSelected = _selectedIds.length == alarms.length;
 
@@ -300,13 +303,13 @@ class _HomeScreenState extends State<HomeScreen> {
                       children: [
                         GestureDetector(
                           onTap: _exitSelectionMode,
-                          child: const Text(
-                            "Cancelar",
-                            style: TextStyle(color: _wordleGreen, fontSize: 16),
+                          child: Text(
+                            l10n.cancel,
+                            style: const TextStyle(color: _wordleGreen, fontSize: 16),
                           ),
                         ),
                         Text(
-                          "${_selectedIds.length} seleccionado${_selectedIds.length != 1 ? 's' : ''}",
+                          l10n.selectedCount(_selectedIds.length),
                           style: const TextStyle(
                             color: Colors.white,
                             fontSize: 17,
@@ -319,8 +322,8 @@ class _HomeScreenState extends State<HomeScreen> {
                               : () => _selectAll(alarms),
                           child: Text(
                             allSelected
-                                ? "Deseleccionar todo"
-                                : "Seleccionar todo",
+                                ? l10n.deselectAll
+                                : l10n.selectAll,
                             style: const TextStyle(
                                 color: _wordleGreen, fontSize: 16),
                             textAlign: TextAlign.right,
@@ -362,25 +365,25 @@ class _HomeScreenState extends State<HomeScreen> {
             const SizedBox(height: 16),
             Expanded(
               child: alarms.isEmpty
-                  ? const Center(
+                  ? Center(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(Icons.alarm_off,
+                          const Icon(Icons.alarm_off,
                               size: 64, color: _wordleBorder),
-                          SizedBox(height: 16),
+                          const SizedBox(height: 16),
                           Text(
-                            "Sin alarmas",
-                            style: TextStyle(
+                            l10n.noAlarms,
+                            style: const TextStyle(
                               color: _wordleTextSecondary,
                               fontSize: 18,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
-                          SizedBox(height: 8),
+                          const SizedBox(height: 8),
                           Text(
-                            "Toca + para agregar una",
-                            style: TextStyle(
+                            l10n.addAlarmHint,
+                            style: const TextStyle(
                               color: Color(0xFF636366),
                               fontSize: 14,
                             ),
@@ -444,7 +447,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                             const SizedBox(height: 4),
                             Text(
-                              "Eliminar",
+                              l10n.delete,
                               style: TextStyle(
                                 color: _selectedIds.isEmpty
                                     ? const Color(0xFF636366)

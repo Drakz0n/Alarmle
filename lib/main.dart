@@ -9,7 +9,6 @@ import 'package:alarmle/screens/wordle_alarm_screen.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:firebase_core/firebase_core.dart';
@@ -129,23 +128,12 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     final settingsVm = context.watch<SettingsViewModel>();
     return MaterialApp(
       onGenerateRoute: (settings) => null,
-      onGenerateTitle: (context) => AppLocalizations.of(context)!.homeTitle,
+      onGenerateTitle: (context) => AppLocalizations.of(context).homeTitle,
       title: 'Alarmle',
       debugShowCheckedModeBanner: false,
       locale: settingsVm.currentLocale,
-      localizationsDelegates: const [
-        AppLocalizations.delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
-      supportedLocales: const [
-        Locale('en'),
-        Locale('es'),
-        Locale('pt'),
-        Locale('fr'),
-        Locale('zh'),
-      ],
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
       theme: ThemeData.dark().copyWith(
         scaffoldBackgroundColor: wordleDarkBg,
         colorScheme: const ColorScheme.dark(

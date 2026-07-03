@@ -1,4 +1,5 @@
 import 'package:alarmle/viewmodels/settings_view_model.dart';
+import 'package:alarmle/l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 
@@ -33,12 +34,13 @@ class SettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final vm = context.watch<SettingsViewModel>();
+    final l10n = AppLocalizations.of(context);
 
     return Scaffold(
       backgroundColor: _wordleDarkBg,
       appBar: AppBar(
         backgroundColor: _wordleSurface,
-        title: const Text('Configuración'),
+        title: Text(l10n.settingsTitle),
         centerTitle: true,
         iconTheme: const IconThemeData(color: Colors.white),
         titleTextStyle: const TextStyle(
@@ -53,7 +55,7 @@ class SettingsScreen extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
               children: [
                 // ─── Tono por defecto ───
-                _SectionLabel('Tono por defecto'),
+                _SectionLabel(l10n.ringtoneLabel),
                 const SizedBox(height: 8),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -83,7 +85,7 @@ class SettingsScreen extends StatelessWidget {
                 const SizedBox(height: 32),
 
                 // ─── Minutos de snooze ───
-                _SectionLabel('Minutos de posponer'),
+                _SectionLabel(l10n.snoozeLabel),
                 const SizedBox(height: 4),
                 Text(
                   '${vm.defaultSnoozeMinutes} min',
@@ -102,7 +104,7 @@ class SettingsScreen extends StatelessWidget {
                 const SizedBox(height: 24),
 
                 // ─── Volumen ───
-                _SectionLabel('Volumen de la app'),
+                _SectionLabel(l10n.volumeLabel),
                 const SizedBox(height: 4),
                 Text(
                   '${(vm.appVolume * 100).round()}%',
@@ -121,7 +123,7 @@ class SettingsScreen extends StatelessWidget {
                 const SizedBox(height: 32),
 
                 // ─── Idioma ───
-                _SectionLabel('Idioma'),
+                _SectionLabel(l10n.languageLabel),
                 const SizedBox(height: 8),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 16),

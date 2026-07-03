@@ -16,4 +16,60 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get leaderboardTab => 'Classificação';
+
+  @override
+  String get settingsTitle => 'Configurações';
+
+  @override
+  String get ringtoneLabel => 'Toque padrão';
+
+  @override
+  String get snoozeLabel => 'Minutos de adiar';
+
+  @override
+  String get volumeLabel => 'Volume do app';
+
+  @override
+  String get languageLabel => 'Idioma';
+
+  @override
+  String get profileLabel => 'Perfil';
+
+  @override
+  String get alarmsLabel => 'Alarmes';
+
+  @override
+  String get rankingLabel => 'Ranking';
+
+  @override
+  String get settingsLabel => 'Configurações';
+
+  @override
+  String get aboutLabel => 'Sobre';
+
+  @override
+  String get noAlarms => 'Sem alarmes';
+
+  @override
+  String get addAlarmHint => 'Toque + para adicionar um';
+
+  @override
+  String get cancel => 'Cancelar';
+
+  @override
+  String get delete => 'Excluir';
+
+  @override
+  String get selectAll => 'Selecionar tudo';
+
+  @override
+  String get deselectAll => 'Desselecionar tudo';
+
+  @override
+  String selectedCount(int count) {
+    return '$count selecionados';
+  }
+
+  @override
+  String get version => 'Versão 1.0.0';
 }
