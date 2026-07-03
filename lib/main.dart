@@ -2,16 +2,19 @@ import 'dart:async';
 import 'package:alarm/alarm.dart' as alarm_package show Alarm;
 import 'package:alarmle/services/alarm_service.dart';
 import 'package:alarmle/viewmodels/alarm_view_model.dart';
+import 'package:alarmle/viewmodels/settings_view_model.dart';
 import 'package:alarmle/viewmodels/user_view_model.dart';
 import 'package:alarmle/screens/home_screen.dart';
 import 'package:alarmle/screens/wordle_alarm_screen.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
+import 'l10n/app_localizations.dart';
 
 // Paleta Wordle unificada
 const wordleGreen = Color(0xFF57AC57);
@@ -35,6 +38,7 @@ void main() async {
       providers: [
         ChangeNotifierProvider(create: (_) => AlarmViewModel()..init()),
         ChangeNotifierProvider(create: (_) => UserViewModel()..init()),
+        ChangeNotifierProvider(create: (_) => SettingsViewModel()..init()),
       ],
       child: const MyApp(),
     ),
@@ -124,8 +128,22 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     return MaterialApp(
       onGenerateRoute: (settings) => null,
+      onGenerateTitle: (context) => AppLocalizations.of(context)!.homeTitle,
       title: 'Alarmle',
       debugShowCheckedModeBanner: false,
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: const [
+        Locale('en'),
+        Locale('es'),
+        Locale('pt'),
+        Locale('fr'),
+        Locale('zh'),
+      ],
       theme: ThemeData.dark().copyWith(
         scaffoldBackgroundColor: wordleDarkBg,
         colorScheme: const ColorScheme.dark(

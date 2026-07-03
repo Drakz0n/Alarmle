@@ -1,0 +1,126 @@
+import 'package:alarmle/viewmodels/settings_view_model.dart';
+import 'package:provider/provider.dart';
+import 'package:flutter/material.dart';
+
+const _wordleGreen = Color(0xFF57AC57);
+const _wordleYellow = Color(0xFFC8B652);
+const _wordleDarkBg = Color(0xFF333333);
+const _wordleSurface = Color(0xFF1C1C1E);
+const _wordleTextSecondary = Color(0xFF8E8E93);
+const _wordleBorder = Color(0xFF3A3A3C);
+
+class SettingsScreen extends StatelessWidget {
+  const SettingsScreen({super.key});
+
+  static const _ringtones = ['Default', 'Alarm', 'Beep', 'Marimba', 'Ring'];
+
+  @override
+  Widget build(BuildContext context) {
+    final vm = context.watch<SettingsViewModel>();
+
+    return Scaffold(
+      backgroundColor: _wordleDarkBg,
+      appBar: AppBar(
+        backgroundColor: _wordleSurface,
+        title: const Text('Configuración'),
+        centerTitle: true,
+        iconTheme: const IconThemeData(color: Colors.white),
+        titleTextStyle: const TextStyle(
+          color: Colors.white,
+          fontSize: 18,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+      body: vm.isLoading
+          ? const Center(child: CircularProgressIndicator(color: _wordleGreen))
+          : ListView(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+              children: [
+                // ─── Tono por defecto ───
+                _SectionLabel('Tono por defecto'),
+                const SizedBox(height: 8),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  decoration: BoxDecoration(
+                    color: _wordleSurface,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: _wordleBorder),
+                  ),
+                  child: DropdownButtonHideUnderline(
+                    child: DropdownButton<String>(
+                      value: vm.defaultRingtone,
+                      dropdownColor: _wordleSurface,
+                      icon: const Icon(Icons.arrow_drop_down, color: _wordleGreen),
+                      style: const TextStyle(color: Colors.white, fontSize: 16),
+                      items: _ringtones
+                          .map((r) => DropdownMenuItem(
+                                value: r,
+                                child: Text(r),
+                              ))
+                          .toList(),
+                      onChanged: (value) {
+                        if (value != null) vm.updateRingtone(value);
+                      },
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 32),
+
+                // ─── Minutos de snooze ───
+                _SectionLabel('Minutos de posponer'),
+                const SizedBox(height: 4),
+                Text(
+                  '${vm.defaultSnoozeMinutes} min',
+                  style: const TextStyle(color: _wordleTextSecondary, fontSize: 14),
+                ),
+                Slider(
+                  value: vm.defaultSnoozeMinutes.toDouble(),
+                  min: 1,
+                  max: 30,
+                  divisions: 29,
+                  activeColor: _wordleGreen,
+                  inactiveColor: _wordleBorder,
+                  label: '${vm.defaultSnoozeMinutes} min',
+                  onChanged: (value) => vm.updateSnoozeMinutes(value.round()),
+                ),
+                const SizedBox(height: 24),
+
+                // ─── Volumen ───
+                _SectionLabel('Volumen de la app'),
+                const SizedBox(height: 4),
+                Text(
+                  '${(vm.appVolume * 100).round()}%',
+                  style: const TextStyle(color: _wordleTextSecondary, fontSize: 14),
+                ),
+                Slider(
+                  value: vm.appVolume,
+                  min: 0.0,
+                  max: 1.0,
+                  divisions: 10,
+                  activeColor: _wordleYellow,
+                  inactiveColor: _wordleBorder,
+                  label: '${(vm.appVolume * 100).round()}%',
+                  onChanged: (value) => vm.updateVolume(value),
+                ),
+              ],
+            ),
+    );
+  }
+}
+
+class _SectionLabel extends StatelessWidget {
+  final String text;
+  const _SectionLabel(this.text);
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      text,
+      style: const TextStyle(
+        color: Colors.white,
+        fontSize: 16,
+        fontWeight: FontWeight.w600,
+      ),
+    );
+  }
+}
