@@ -342,7 +342,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 _buildWordleLogo(),
                                 const SizedBox(height: 6),
                                 Text(
-                                  vm.nextAlarmText,
+                                  vm.nextAlarmText(l10n),
                                   style: const TextStyle(
                                     color: _wordleTextSecondary,
                                     fontSize: 13,

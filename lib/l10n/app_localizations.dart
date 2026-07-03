@@ -229,6 +229,402 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Version 1.0.0'**
   String get version;
+
+  /// No description provided for @profileTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile'**
+  String get profileTitle;
+
+  /// No description provided for @online.
+  ///
+  /// In en, this message translates to:
+  /// **'Online'**
+  String get online;
+
+  /// No description provided for @offline.
+  ///
+  /// In en, this message translates to:
+  /// **'Offline'**
+  String get offline;
+
+  /// No description provided for @noInternet.
+  ///
+  /// In en, this message translates to:
+  /// **'No internet connection'**
+  String get noInternet;
+
+  /// No description provided for @guestName.
+  ///
+  /// In en, this message translates to:
+  /// **'User'**
+  String get guestName;
+
+  /// No description provided for @scoreLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Score'**
+  String get scoreLabel;
+
+  /// No description provided for @pointsLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} points'**
+  String pointsLabel(int count);
+
+  /// No description provided for @accumulatedPoints.
+  ///
+  /// In en, this message translates to:
+  /// **'Accumulated points'**
+  String get accumulatedPoints;
+
+  /// No description provided for @accountLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Account'**
+  String get accountLabel;
+
+  /// No description provided for @nameLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get nameLabel;
+
+  /// No description provided for @emailLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get emailLabel;
+
+  /// No description provided for @signOut.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign out'**
+  String get signOut;
+
+  /// No description provided for @loginToSync.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in to sync your data and not lose it'**
+  String get loginToSync;
+
+  /// No description provided for @loginOrRegister.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in / Register'**
+  String get loginOrRegister;
+
+  /// No description provided for @noData.
+  ///
+  /// In en, this message translates to:
+  /// **'No data'**
+  String get noData;
+
+  /// No description provided for @noPlayersYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No players in the ranking yet'**
+  String get noPlayersYet;
+
+  /// No description provided for @createAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Create account'**
+  String get createAccount;
+
+  /// No description provided for @signIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in'**
+  String get signIn;
+
+  /// No description provided for @checkEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Check your email'**
+  String get checkEmail;
+
+  /// No description provided for @emailVerificationSent.
+  ///
+  /// In en, this message translates to:
+  /// **'We sent a verification link to {email}'**
+  String emailVerificationSent(String email);
+
+  /// No description provided for @backToHome.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to home'**
+  String get backToHome;
+
+  /// No description provided for @or.
+  ///
+  /// In en, this message translates to:
+  /// **'or'**
+  String get or;
+
+  /// No description provided for @yourName.
+  ///
+  /// In en, this message translates to:
+  /// **'Your name'**
+  String get yourName;
+
+  /// No description provided for @enterEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your email'**
+  String get enterEmail;
+
+  /// No description provided for @password.
+  ///
+  /// In en, this message translates to:
+  /// **'Password'**
+  String get password;
+
+  /// No description provided for @continueWithEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue with email'**
+  String get continueWithEmail;
+
+  /// No description provided for @haveAccountSignIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Already have an account? Sign in'**
+  String get haveAccountSignIn;
+
+  /// No description provided for @noAccountRegister.
+  ///
+  /// In en, this message translates to:
+  /// **'Don\'t have an account? Register'**
+  String get noAccountRegister;
+
+  /// No description provided for @termsNotice.
+  ///
+  /// In en, this message translates to:
+  /// **'By continuing, you agree to the Terms of Service and Privacy Policy.'**
+  String get termsNotice;
+
+  /// No description provided for @continueWithGoogle.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue with Google'**
+  String get continueWithGoogle;
+
+  /// No description provided for @fillAllFields.
+  ///
+  /// In en, this message translates to:
+  /// **'Fill in all fields'**
+  String get fillAllFields;
+
+  /// No description provided for @newAlarm.
+  ///
+  /// In en, this message translates to:
+  /// **'New alarm'**
+  String get newAlarm;
+
+  /// No description provided for @editAlarm.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit alarm'**
+  String get editAlarm;
+
+  /// No description provided for @done.
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get done;
+
+  /// No description provided for @selectAtLeastOneDay.
+  ///
+  /// In en, this message translates to:
+  /// **'Select at least one day'**
+  String get selectAtLeastOneDay;
+
+  /// No description provided for @nextAlarmIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Next alarm in {time}'**
+  String nextAlarmIn(String time);
+
+  /// No description provided for @onceLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Once'**
+  String get onceLabel;
+
+  /// No description provided for @customizeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Customize'**
+  String get customizeLabel;
+
+  /// No description provided for @alarmName.
+  ///
+  /// In en, this message translates to:
+  /// **'Alarm name'**
+  String get alarmName;
+
+  /// No description provided for @ringtoneSetting.
+  ///
+  /// In en, this message translates to:
+  /// **'Ringtone'**
+  String get ringtoneSetting;
+
+  /// No description provided for @defaultAlarmSound.
+  ///
+  /// In en, this message translates to:
+  /// **'Default alarm sound'**
+  String get defaultAlarmSound;
+
+  /// No description provided for @vibrateLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Vibrate'**
+  String get vibrateLabel;
+
+  /// No description provided for @amLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'AM'**
+  String get amLabel;
+
+  /// No description provided for @pmLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'PM'**
+  String get pmLabel;
+
+  /// No description provided for @monShort.
+  ///
+  /// In en, this message translates to:
+  /// **'M'**
+  String get monShort;
+
+  /// No description provided for @tueShort.
+  ///
+  /// In en, this message translates to:
+  /// **'T'**
+  String get tueShort;
+
+  /// No description provided for @wedShort.
+  ///
+  /// In en, this message translates to:
+  /// **'W'**
+  String get wedShort;
+
+  /// No description provided for @thuShort.
+  ///
+  /// In en, this message translates to:
+  /// **'T'**
+  String get thuShort;
+
+  /// No description provided for @friShort.
+  ///
+  /// In en, this message translates to:
+  /// **'F'**
+  String get friShort;
+
+  /// No description provided for @satShort.
+  ///
+  /// In en, this message translates to:
+  /// **'S'**
+  String get satShort;
+
+  /// No description provided for @sunShort.
+  ///
+  /// In en, this message translates to:
+  /// **'S'**
+  String get sunShort;
+
+  /// No description provided for @monLong.
+  ///
+  /// In en, this message translates to:
+  /// **'Mon'**
+  String get monLong;
+
+  /// No description provided for @tueLong.
+  ///
+  /// In en, this message translates to:
+  /// **'Tue'**
+  String get tueLong;
+
+  /// No description provided for @wedLong.
+  ///
+  /// In en, this message translates to:
+  /// **'Wed'**
+  String get wedLong;
+
+  /// No description provided for @thuLong.
+  ///
+  /// In en, this message translates to:
+  /// **'Thu'**
+  String get thuLong;
+
+  /// No description provided for @friLong.
+  ///
+  /// In en, this message translates to:
+  /// **'Fri'**
+  String get friLong;
+
+  /// No description provided for @satLong.
+  ///
+  /// In en, this message translates to:
+  /// **'Sat'**
+  String get satLong;
+
+  /// No description provided for @sunLong.
+  ///
+  /// In en, this message translates to:
+  /// **'Sun'**
+  String get sunLong;
+
+  /// No description provided for @ringOnce.
+  ///
+  /// In en, this message translates to:
+  /// **'Ring once'**
+  String get ringOnce;
+
+  /// No description provided for @everyDay.
+  ///
+  /// In en, this message translates to:
+  /// **'Every day'**
+  String get everyDay;
+
+  /// No description provided for @weekdays.
+  ///
+  /// In en, this message translates to:
+  /// **'Mon to Fri'**
+  String get weekdays;
+
+  /// No description provided for @noActiveAlarms.
+  ///
+  /// In en, this message translates to:
+  /// **'No active alarms'**
+  String get noActiveAlarms;
+
+  /// No description provided for @youWon.
+  ///
+  /// In en, this message translates to:
+  /// **'YOU WON'**
+  String get youWon;
+
+  /// No description provided for @youLost.
+  ///
+  /// In en, this message translates to:
+  /// **'YOU LOST'**
+  String get youLost;
+
+  /// No description provided for @wordLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Word: {word}'**
+  String wordLabel(String word);
+
+  /// No description provided for @scoreCapsLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'SCORE: {count} PTS'**
+  String scoreCapsLabel(int count);
 }
 
 class _AppLocalizationsDelegate

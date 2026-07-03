@@ -1,6 +1,7 @@
 import 'package:alarmle/services/core/storage_service.dart';
 import 'package:alarmle/services/alarm_service.dart';
 import 'package:alarmle/models/alarm_model.dart';
+import 'package:alarmle/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 class AlarmViewModel extends ChangeNotifier
@@ -80,10 +81,10 @@ class AlarmViewModel extends ChangeNotifier
     notifyListeners();
   }
 
-  String get nextAlarmText
+  String nextAlarmText(AppLocalizations l10n)
   {
     final enabled = _alarms.where((a) => a.isEnabled).toList();
-    if (enabled.isEmpty) return "Sin alarmas activas";
+    if (enabled.isEmpty) return l10n.noActiveAlarms;
 
     final now = DateTime.now();
 
@@ -103,7 +104,7 @@ class AlarmViewModel extends ChangeNotifier
       }
     }
 
-    if (nextTrigger == null) return "Sin alarmas activas";
+    if (nextTrigger == null) return l10n.noActiveAlarms;
 
     final diff = nextTrigger.difference(now);
     final hours = diff.inHours;
@@ -112,10 +113,10 @@ class AlarmViewModel extends ChangeNotifier
     if (hours >= 24) 
     {
       final days = diff.inDays;
-      return "Siguiente alarma en $days día${days > 1 ? 's' : ''}";
+      return l10n.nextAlarmIn("$days d");
     }
     
-    if (hours > 0) return "Siguiente alarma en ${hours}h ${minutes}min";
-    return "Siguiente alarma en $minutes minuto${minutes != 1 ? 's' : ''}";
+    if (hours > 0) return l10n.nextAlarmIn("${hours}h ${minutes}min");
+    return l10n.nextAlarmIn("$minutes min");
   }
 }

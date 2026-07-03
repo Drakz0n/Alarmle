@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:alarmle/models/user_model.dart';
 import 'package:alarmle/viewmodels/user_view_model.dart';
+import 'package:alarmle/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -29,20 +30,21 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
   @override
   Widget build(BuildContext context) {
     final vm = context.watch<UserViewModel>();
+    final l10n = AppLocalizations.of(context);
 
     return Scaffold(
       backgroundColor: _wordleDarkBg,
       appBar: AppBar(
         backgroundColor: _wordleSurface,
         foregroundColor: Colors.white,
-        title: const Row(
+        title: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.emoji_events, color: _wordleGreen, size: 24),
-            SizedBox(width: 8),
+            const Icon(Icons.emoji_events, color: _wordleGreen, size: 24),
+            const SizedBox(width: 8),
             Text(
-              "Ranking",
-              style: TextStyle(fontWeight: FontWeight.w700, fontSize: 18),
+              l10n.rankingLabel,
+              style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 18),
             ),
           ],
         ),
@@ -55,25 +57,25 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
                 child: CircularProgressIndicator(color: _wordleGreen),
               )
             : vm.leaderboard.isEmpty
-                ? const Center(
+                ? Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.emoji_events_outlined,
+                        const Icon(Icons.emoji_events_outlined,
                             size: 64, color: _wordleBorder),
-                        SizedBox(height: 16),
+                        const SizedBox(height: 16),
                         Text(
-                          "Sin datos",
-                          style: TextStyle(
+                          l10n.noData,
+                          style: const TextStyle(
                             color: _wordleTextSecondary,
                             fontSize: 18,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
-                        SizedBox(height: 8),
+                        const SizedBox(height: 8),
                         Text(
-                          "Aún no hay jugadores en el ranking",
-                          style: TextStyle(
+                          l10n.noPlayersYet,
+                          style: const TextStyle(
                             color: Color(0xFF636366),
                             fontSize: 14,
                           ),

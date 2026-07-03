@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../viewmodels/user_view_model.dart';
 import '../main.dart';
+import '../l10n/app_localizations.dart';
 import 'login_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -39,6 +40,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     final vm   = context.watch<UserViewModel>();
     final user = vm.user;
+    final l10n = AppLocalizations.of(context);
 
     return Scaffold(
       backgroundColor: wordleDarkBg,
@@ -48,9 +50,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
           icon: const Icon(Icons.arrow_back_ios, color: Colors.white, size: 20),
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Text(
-          'Perfil',
-          style: TextStyle(
+        title: Text(
+          l10n.profileTitle,
+          style: const TextStyle(
               color: Colors.white, fontSize: 17, fontWeight: FontWeight.w600),
         ),
         centerTitle: true,
@@ -69,7 +71,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                   const SizedBox(width: 6),
                   Text(
-                    vm.isConnected ? 'En línea' : 'Sin conexión',
+                    vm.isConnected ? l10n.online : l10n.offline,
                     style: TextStyle(
                       color: vm.isConnected ? wordleGreen : Colors.red,
                       fontSize: 12,
@@ -138,14 +140,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           border: Border.all(
                               color: Colors.red.withValues(alpha: 0.3)),
                         ),
-                        child: const Row(
+                        child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Icon(Icons.wifi_off, color: Colors.red, size: 18),
-                            SizedBox(width: 8),
+                            const Icon(Icons.wifi_off, color: Colors.red, size: 18),
+                            const SizedBox(width: 8),
                             Text(
-                              'Sin conexión a internet',
-                              style: TextStyle(
+                              l10n.noInternet,
+                              style: const TextStyle(
                                 color: Colors.red,
                                 fontSize: 13,
                                 fontWeight: FontWeight.w600,
@@ -194,7 +196,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Text(
-                            user?.name ?? 'Usuario',
+                            user?.name ?? l10n.guestName,
                             style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 20,
@@ -225,7 +227,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               const SizedBox(height: 32),
 
               _buildSection(
-                title: 'Puntuación',
+                title: l10n.scoreLabel,
                 child: Container(
                   padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
@@ -242,14 +244,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              '${user?.score ?? 0} puntos',
+                              l10n.pointsLabel(user?.score ?? 0),
                               style: const TextStyle(
                                   color: Colors.white,
                                   fontSize: 22,
                                   fontWeight: FontWeight.bold),
                             ),
                             Text(
-                              'Puntos acumulados',
+                              l10n.accumulatedPoints,
                               style: TextStyle(
                                   color: wordleTextSecondary, fontSize: 13),
                             ),
@@ -277,15 +279,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
               if (vm.isConnected)
               _buildSection(
-                title: 'Cuenta',
+                title: l10n.accountLabel,
                 child: Container(
                   decoration: BoxDecoration(
                     color: wordleSurface,
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: vm.isLoggedIn && !vm.isGuest
-                      ? _buildLoggedInAccount(vm)
-                      : _buildGuestAccount(),
+                      ? _buildLoggedInAccount(vm, l10n)
+                      : _buildGuestAccount(l10n),
                 ),
               ),
 
@@ -297,25 +299,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget _buildLoggedInAccount(UserViewModel vm) {
+  Widget _buildLoggedInAccount(UserViewModel vm, AppLocalizations l10n) {
     return Column(
       children: [
         _buildInfoRow(
           icon: Icons.person_outline,
-          label: 'Nombre',
+          label: l10n.nameLabel,
           value: vm.user?.name ?? '',
         ),
         Divider(height: 1, color: wordleBorder, indent: 52),
         _buildInfoRow(
           icon: Icons.email_outlined,
-          label: 'Correo',
+          label: l10n.emailLabel,
           value: vm.user?.email ?? '',
         ),
         Divider(height: 1, color: wordleBorder, indent: 52),
         ListTile(
           leading: const Icon(Icons.logout, color: Colors.red, size: 20),
-          title: const Text('Cerrar sesión',
-              style: TextStyle(color: Colors.red, fontSize: 15)),
+          title: Text(l10n.signOut,
+              style: const TextStyle(color: Colors.red, fontSize: 15)),
           onTap: () async {
             await vm.signOut();
             if (mounted) Navigator.pop(context);
@@ -325,13 +327,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget _buildGuestAccount() {
+  Widget _buildGuestAccount(AppLocalizations l10n) {
     return Padding(
       padding: const EdgeInsets.all(20),
       child: Column(
         children: [
           Text(
-            'Inicia sesión para sincronizar tus datos y no perderlos',
+            l10n.loginToSync,
             style: TextStyle(color: wordleTextSecondary, fontSize: 14),
             textAlign: TextAlign.center,
           ),
@@ -349,8 +351,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12)),
               ),
-              child: const Text('Iniciar sesión / Registrarse',
-                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
+              child: Text(l10n.loginOrRegister,
+                  style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
             ),
           ),
         ],

@@ -1,4 +1,5 @@
 import 'package:alarmle/models/alarm_model.dart';
+import 'package:alarmle/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 const _wordleGreen = Color(0xFF57AC57);
@@ -27,6 +28,7 @@ class AlarmCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final timeColor = alarm.isEnabled
         ? Colors.white
         : const Color(0xFF636366);
@@ -72,7 +74,7 @@ class AlarmCard extends StatelessWidget {
                       ),
                       const SizedBox(width: 6),
                       Text(
-                        alarm.period,
+                        alarm.period(l10n),
                         style: TextStyle(
                           color: subtitleColor,
                           fontSize: 16,
@@ -99,7 +101,7 @@ class AlarmCard extends StatelessWidget {
                       Icon(Icons.repeat, size: 13, color: subtitleColor),
                       const SizedBox(width: 4),
                       Text(
-                        alarm.repeatLabel,
+                        alarm.repeatLabel(l10n),
                         style: TextStyle(color: subtitleColor, fontSize: 13),
                       ),
                       if (alarm.vibrate) ...[

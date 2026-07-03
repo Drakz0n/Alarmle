@@ -72,4 +72,213 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get version => 'Version 1.0.0';
+
+  @override
+  String get profileTitle => 'Profile';
+
+  @override
+  String get online => 'Online';
+
+  @override
+  String get offline => 'Offline';
+
+  @override
+  String get noInternet => 'No internet connection';
+
+  @override
+  String get guestName => 'User';
+
+  @override
+  String get scoreLabel => 'Score';
+
+  @override
+  String pointsLabel(int count) {
+    return '$count points';
+  }
+
+  @override
+  String get accumulatedPoints => 'Accumulated points';
+
+  @override
+  String get accountLabel => 'Account';
+
+  @override
+  String get nameLabel => 'Name';
+
+  @override
+  String get emailLabel => 'Email';
+
+  @override
+  String get signOut => 'Sign out';
+
+  @override
+  String get loginToSync => 'Sign in to sync your data and not lose it';
+
+  @override
+  String get loginOrRegister => 'Sign in / Register';
+
+  @override
+  String get noData => 'No data';
+
+  @override
+  String get noPlayersYet => 'No players in the ranking yet';
+
+  @override
+  String get createAccount => 'Create account';
+
+  @override
+  String get signIn => 'Sign in';
+
+  @override
+  String get checkEmail => 'Check your email';
+
+  @override
+  String emailVerificationSent(String email) {
+    return 'We sent a verification link to $email';
+  }
+
+  @override
+  String get backToHome => 'Back to home';
+
+  @override
+  String get or => 'or';
+
+  @override
+  String get yourName => 'Your name';
+
+  @override
+  String get enterEmail => 'Enter your email';
+
+  @override
+  String get password => 'Password';
+
+  @override
+  String get continueWithEmail => 'Continue with email';
+
+  @override
+  String get haveAccountSignIn => 'Already have an account? Sign in';
+
+  @override
+  String get noAccountRegister => 'Don\'t have an account? Register';
+
+  @override
+  String get termsNotice =>
+      'By continuing, you agree to the Terms of Service and Privacy Policy.';
+
+  @override
+  String get continueWithGoogle => 'Continue with Google';
+
+  @override
+  String get fillAllFields => 'Fill in all fields';
+
+  @override
+  String get newAlarm => 'New alarm';
+
+  @override
+  String get editAlarm => 'Edit alarm';
+
+  @override
+  String get done => 'Done';
+
+  @override
+  String get selectAtLeastOneDay => 'Select at least one day';
+
+  @override
+  String nextAlarmIn(String time) {
+    return 'Next alarm in $time';
+  }
+
+  @override
+  String get onceLabel => 'Once';
+
+  @override
+  String get customizeLabel => 'Customize';
+
+  @override
+  String get alarmName => 'Alarm name';
+
+  @override
+  String get ringtoneSetting => 'Ringtone';
+
+  @override
+  String get defaultAlarmSound => 'Default alarm sound';
+
+  @override
+  String get vibrateLabel => 'Vibrate';
+
+  @override
+  String get amLabel => 'AM';
+
+  @override
+  String get pmLabel => 'PM';
+
+  @override
+  String get monShort => 'M';
+
+  @override
+  String get tueShort => 'T';
+
+  @override
+  String get wedShort => 'W';
+
+  @override
+  String get thuShort => 'T';
+
+  @override
+  String get friShort => 'F';
+
+  @override
+  String get satShort => 'S';
+
+  @override
+  String get sunShort => 'S';
+
+  @override
+  String get monLong => 'Mon';
+
+  @override
+  String get tueLong => 'Tue';
+
+  @override
+  String get wedLong => 'Wed';
+
+  @override
+  String get thuLong => 'Thu';
+
+  @override
+  String get friLong => 'Fri';
+
+  @override
+  String get satLong => 'Sat';
+
+  @override
+  String get sunLong => 'Sun';
+
+  @override
+  String get ringOnce => 'Ring once';
+
+  @override
+  String get everyDay => 'Every day';
+
+  @override
+  String get weekdays => 'Mon to Fri';
+
+  @override
+  String get noActiveAlarms => 'No active alarms';
+
+  @override
+  String get youWon => 'YOU WON';
+
+  @override
+  String get youLost => 'YOU LOST';
+
+  @override
+  String wordLabel(String word) {
+    return 'Word: $word';
+  }
+
+  @override
+  String scoreCapsLabel(int count) {
+    return 'SCORE: $count PTS';
+  }
 }

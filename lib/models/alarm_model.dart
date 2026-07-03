@@ -1,4 +1,4 @@
-import 'dart:convert';
+import 'package:alarmle/l10n/app_localizations.dart';
 
 class Alarm 
 {
@@ -63,20 +63,23 @@ class Alarm
     return "$h:$m";
   }
 
-  String get period => hour >= 12 ? 'p. m.' : 'a. m.';
+  String period(AppLocalizations l10n) => hour >= 12 ? l10n.pmLabel : l10n.amLabel;
 
   //helper para mostrar los dias que se repite la alarma
-  String get repeatLabel
+  String repeatLabel(AppLocalizations l10n)
   {
-    const names = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
+    final names = [
+      l10n.monLong, l10n.tueLong, l10n.wedLong, l10n.thuLong,
+      l10n.friLong, l10n.satLong, l10n.sunLong,
+    ];
     final active = <String>[];
     for (int i = 0; i < 7; i++) 
     {
       if (repeatDays[i]) active.add(names[i]);
     }
-    if (active.isEmpty) return "Timbrar una vez";
-    if (active.length == 7) return "Todos los días";
-    if (active.length == 5 && !repeatDays[5] && !repeatDays[6]) return "Lunes a viernes";
+    if (active.isEmpty) return l10n.ringOnce;
+    if (active.length == 7) return l10n.everyDay;
+    if (active.length == 5 && !repeatDays[5] && !repeatDays[6]) return l10n.weekdays;
     return active.join(' ');
   }
 }

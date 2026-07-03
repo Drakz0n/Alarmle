@@ -1,5 +1,6 @@
 import 'package:alarm/alarm.dart' as alarm_package show Alarm;
 import 'package:alarmle/screens/home_screen.dart';
+import 'package:alarmle/l10n/app_localizations.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -265,6 +266,7 @@ class _WordleAlarmScreenState extends State<WordleAlarmScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return PopScope(
       canPop: false,
       child: Scaffold(
@@ -380,8 +382,8 @@ class _WordleAlarmScreenState extends State<WordleAlarmScreen> {
                                                         const Color(
                                                             0xFF6AAA64)) &&
                                                 _wordleDeHoy.isNotEmpty
-                                            ? "GANASTE"
-                                            : "PERDISTE",
+                                            ? l10n.youWon
+                                            : l10n.youLost,
                                         style: const TextStyle(
                                             fontSize: 28,
                                             fontWeight: FontWeight.bold,
@@ -394,7 +396,7 @@ class _WordleAlarmScreenState extends State<WordleAlarmScreen> {
                                                   const Color(0xFF6AAA64))) &&
                                           _wordleDeHoy.isNotEmpty)
                                         Text(
-                                            "Palabra: $_wordleDeHoy",
+                                            l10n.wordLabel(_wordleDeHoy),
                                             style: const TextStyle(
                                                 fontSize: 14,
                                                 fontWeight: FontWeight.w600,
@@ -409,7 +411,7 @@ class _WordleAlarmScreenState extends State<WordleAlarmScreen> {
                                           borderRadius:
                                               BorderRadius.circular(10)),
                                       child: Text(
-                                        "PUNTAJE: $_puntajeTotal PTS",
+                                        l10n.scoreCapsLabel(_puntajeTotal),
                                         style: const TextStyle(
                                             fontSize: 18,
                                             fontWeight: FontWeight.bold,

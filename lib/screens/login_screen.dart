@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../viewmodels/user_view_model.dart';
 import '../main.dart'; // para las constantes wordle*
+import '../l10n/app_localizations.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -38,6 +39,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Future<void> _handleEmail() async {
     final vm = context.read<UserViewModel>();
+    final l10n = AppLocalizations.of(context);
     setState(() { _errorMessage = null; _verificationSent = false; });
 
     final email    = _emailController.text.trim();
@@ -45,7 +47,7 @@ class _LoginScreenState extends State<LoginScreen> {
     final name     = _nameController.text.trim();
 
     if (email.isEmpty || password.isEmpty) {
-      setState(() => _errorMessage = 'Completa todos los campos');
+      setState(() => _errorMessage = l10n.fillAllFields);
       return;
     }
 
@@ -70,6 +72,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     final vm = context.watch<UserViewModel>();
+    final l10n = AppLocalizations.of(context);
 
     return Scaffold(
       backgroundColor: wordleDarkBg,
@@ -80,7 +83,7 @@ class _LoginScreenState extends State<LoginScreen> {
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
-          _isRegister ? 'Crear cuenta' : 'Iniciar sesión',
+          _isRegister ? l10n.createAccount : l10n.signIn,
           style: const TextStyle(color: Colors.white, fontSize: 17),
         ),
         centerTitle: true,
@@ -106,16 +109,16 @@ class _LoginScreenState extends State<LoginScreen> {
                       Icon(Icons.mark_email_read_outlined,
                           color: wordleGreen, size: 36),
                       const SizedBox(height: 8),
-                      const Text(
-                        'Revisa tu correo',
-                        style: TextStyle(
+                      Text(
+                        l10n.checkEmail,
+                        style: const TextStyle(
                             color: Colors.white,
                             fontSize: 16,
                             fontWeight: FontWeight.w600),
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        'Enviamos un enlace de verificación a ${_emailController.text.trim()}',
+                        l10n.emailVerificationSent(_emailController.text.trim()),
                         style: const TextStyle(
                             color: wordleTextSecondary, fontSize: 13),
                         textAlign: TextAlign.center,
@@ -124,7 +127,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       TextButton(
                         onPressed: () => context.read<UserViewModel>()
                             .signOut().then((_) => Navigator.pop(context)),
-                        child: Text('Volver al inicio',
+                        child: Text(l10n.backToHome,
                             style: TextStyle(color: wordleGreen)),
                       ),
                     ],
@@ -134,7 +137,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ],
 
               if (!_verificationSent) ...[
-                _buildGoogleButton(vm.isLoading),
+                _buildGoogleButton(vm.isLoading, l10n),
                 const SizedBox(height: 20),
 
                 Row(
@@ -142,7 +145,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     Expanded(child: Divider(color: wordleBorder)),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 12),
-                      child: Text('o',
+                      child: Text(l10n.or,
                           style: TextStyle(color: wordleTextSecondary)),
                     ),
                     Expanded(child: Divider(color: wordleBorder)),
@@ -153,7 +156,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 if (_isRegister) ...[
                   _buildTextField(
                     controller: _nameController,
-                    hint: 'Tu nombre',
+                    hint: l10n.yourName,
                     icon: Icons.person_outline,
                   ),
                   const SizedBox(height: 10),
@@ -161,7 +164,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                 _buildTextField(
                   controller: _emailController,
-                  hint: 'Ingresa tu correo electrónico',
+                  hint: l10n.enterEmail,
                   icon: Icons.email_outlined,
                   keyboardType: TextInputType.emailAddress,
                 ),
@@ -169,7 +172,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                 _buildTextField(
                   controller: _passwordController,
-                  hint: 'Contraseña',
+                  hint: l10n.password,
                   icon: Icons.lock_outline,
                   obscure: _obscurePassword,
                   suffixIcon: IconButton(
@@ -213,8 +216,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         )
                       : Text(
                           _isRegister
-                              ? 'Crear cuenta'
-                              : 'Continuar con correo electrónico',
+                              ? l10n.createAccount
+                              : l10n.continueWithEmail,
                           style: const TextStyle(
                               fontSize: 15, fontWeight: FontWeight.w600),
                         ),
@@ -229,17 +232,17 @@ class _LoginScreenState extends State<LoginScreen> {
                     }),
                     child: Text(
                       _isRegister
-                          ? '¿Ya tienes cuenta? Inicia sesión'
-                          : '¿No tienes cuenta? Regístrate',
+                          ? l10n.haveAccountSignIn
+                          : l10n.noAccountRegister,
                       style: TextStyle(color: wordleGreen, fontSize: 14),
                     ),
                   ),
                 ),
 
                 const SizedBox(height: 8),
-                const Text(
-                  'Al continuar, aceptas los Términos de servicio y la Política de privacidad.',
-                  style: TextStyle(color: wordleTextSecondary, fontSize: 11),
+                Text(
+                  l10n.termsNotice,
+                  style: const TextStyle(color: wordleTextSecondary, fontSize: 11),
                   textAlign: TextAlign.center,
                 ),
               ],
@@ -250,7 +253,7 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget _buildGoogleButton(bool loading) {
+  Widget _buildGoogleButton(bool loading, AppLocalizations l10n) {
     return OutlinedButton(
       onPressed: loading ? null : _handleGoogle,
       style: OutlinedButton.styleFrom(
@@ -269,9 +272,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 const Icon(Icons.g_mobiledata, color: Colors.white, size: 20),
           ),
           const SizedBox(width: 10),
-          const Text(
-            'Continuar con Google',
-            style: TextStyle(
+          Text(
+            l10n.continueWithGoogle,
+            style: const TextStyle(
                 color: Colors.white,
                 fontSize: 15,
                 fontWeight: FontWeight.w500),

@@ -1,4 +1,5 @@
 import 'package:alarmle/models/alarm_model.dart';
+import 'package:alarmle/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 const _wordleGreen = Color(0xFF57AC57);
@@ -6,7 +7,6 @@ const _wordleSurfaceLight = Color(0xFF2C2C2E);
 const _wordleTextPrimary = Colors.white;
 const _wordleTextSecondary = Color(0xFF8E8E93);
 const _wordleBorder = Color(0xFF3A3A3C);
-const _dayLabels = ['L', 'M', 'X', 'J', 'V', 'S', 'D'];
 const _loopMultiplier = 1000;
 
 class EditAlarmSheet extends StatefulWidget {
@@ -72,7 +72,7 @@ class _EditAlarmSheetState extends State<EditAlarmSheet> {
     super.dispose();
   }
 
-  String _nextAlarmPreview() {
+  String _nextAlarmPreview(AppLocalizations l10n) {
     final now = DateTime.now();
     final int hour24 = _isPM
         ? (_hour == 12 ? 12 : _hour + 12)
@@ -85,7 +85,7 @@ class _EditAlarmSheetState extends State<EditAlarmSheet> {
       trigger = today.isAfter(now) ? today : today.add(const Duration(days: 1));
     } else {
       final anySelected = _repeatDays.any((d) => d);
-      if (!anySelected) return "Selecciona al menos un día";
+      if (!anySelected) return l10n.selectAtLeastOneDay;
 
       for (int offset = 0; offset < 7; offset++) {
         final candidate = DateTime(
@@ -108,12 +108,12 @@ class _EditAlarmSheetState extends State<EditAlarmSheet> {
 
     if (days >= 1) {
       if (hours > 0) {
-        return "Siguiente alarma en $days día${days > 1 ? 's' : ''} ${hours}h ${mins}min";
+        return l10n.nextAlarmIn("$days d ${hours}h ${mins}min");
       }
-      return "Siguiente alarma en $days día${days > 1 ? 's' : ''} y ${mins}min";
+      return l10n.nextAlarmIn("$days d ${mins}min");
     }
-    if (hours > 0) return "Siguiente alarma en ${hours}h ${mins}min";
-    return "Siguiente alarma en $mins minuto${mins != 1 ? 's' : ''}";
+    if (hours > 0) return l10n.nextAlarmIn("${hours}h ${mins}min");
+    return l10n.nextAlarmIn("$mins min");
   }
 
   void _submit() {
@@ -140,7 +140,7 @@ class _EditAlarmSheetState extends State<EditAlarmSheet> {
     Navigator.pop(context);
   }
 
-  Widget _buildDrumPicker() {
+  Widget _buildDrumPicker(AppLocalizations l10n) {
     return SizedBox(
       height: 160,
       child: Row(
@@ -181,7 +181,7 @@ class _EditAlarmSheetState extends State<EditAlarmSheet> {
               diameterRatio: 1.4,
               physics: const FixedExtentScrollPhysics(),
               onSelectedItemChanged: (i) => setState(() => _isPM = i == 1),
-              children: ['a. m.', 'p. m.'].map((label) {
+              children: [l10n.amLabel, l10n.pmLabel].map((label) {
                 return Center(
                   child: Text(
                     label,
@@ -229,7 +229,12 @@ class _EditAlarmSheetState extends State<EditAlarmSheet> {
     );
   }
 
-  Widget _buildRepeatSection() {
+  Widget _buildRepeatSection(AppLocalizations l10n) {
+    final dayLabels = [
+      l10n.monShort, l10n.tueShort, l10n.wedShort, l10n.thuShort,
+      l10n.friShort, l10n.satShort, l10n.sunShort,
+    ];
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -238,13 +243,13 @@ class _EditAlarmSheetState extends State<EditAlarmSheet> {
             mainAxisSize: MainAxisSize.min,
             children: [
               _buildRepeatChip(
-                label: 'Una vez',
+                label: l10n.onceLabel,
                 selected: _repeatOnce,
                 onTap: () => setState(() => _repeatOnce = true),
               ),
               const SizedBox(width: 10),
               _buildRepeatChip(
-                label: 'Personalizar',
+                label: l10n.customizeLabel,
                 selected: !_repeatOnce,
                 onTap: () => setState(() => _repeatOnce = false),
               ),
@@ -272,7 +277,7 @@ class _EditAlarmSheetState extends State<EditAlarmSheet> {
                   ),
                   alignment: Alignment.center,
                   child: Text(
-                    _dayLabels[i],
+                    dayLabels[i],
                     style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
@@ -357,6 +362,7 @@ class _EditAlarmSheetState extends State<EditAlarmSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Padding(
       padding: EdgeInsets.only(
         left: 20,
@@ -386,13 +392,13 @@ class _EditAlarmSheetState extends State<EditAlarmSheet> {
                 children: [
                   GestureDetector(
                     onTap: () => Navigator.pop(context),
-                    child: const Text("Cancelar",
-                        style: TextStyle(
+                    child: Text(l10n.cancel,
+                        style: const TextStyle(
                             color: _wordleGreen, fontSize: 16)),
                   ),
-                  const Text(
-                    "Editar alarma",
-                    style: TextStyle(
+                  Text(
+                    l10n.editAlarm,
+                    style: const TextStyle(
                       color: _wordleTextPrimary,
                       fontSize: 17,
                       fontWeight: FontWeight.w600,
@@ -400,9 +406,9 @@ class _EditAlarmSheetState extends State<EditAlarmSheet> {
                   ),
                   GestureDetector(
                     onTap: _submit,
-                    child: const Text(
-                      "Hecho",
-                      style: TextStyle(
+                    child: Text(
+                      l10n.done,
+                      style: const TextStyle(
                           color: _wordleGreen,
                           fontSize: 16,
                           fontWeight: FontWeight.w600),
@@ -413,7 +419,7 @@ class _EditAlarmSheetState extends State<EditAlarmSheet> {
               const SizedBox(height: 6),
               Center(
                 child: Text(
-                  _nextAlarmPreview(),
+                  _nextAlarmPreview(l10n),
                   style: const TextStyle(
                       color: _wordleTextSecondary, fontSize: 13),
                 ),
@@ -421,16 +427,16 @@ class _EditAlarmSheetState extends State<EditAlarmSheet> {
             ],
           ),
           const SizedBox(height: 20),
-          _buildDrumPicker(),
+          _buildDrumPicker(l10n),
           const SizedBox(height: 24),
-          _buildRepeatSection(),
+          _buildRepeatSection(l10n),
           const SizedBox(height: 20),
           TextField(
             controller: _titleController,
             style: const TextStyle(color: _wordleTextPrimary),
             onChanged: (_) => setState(() {}),
             decoration: InputDecoration(
-              hintText: "Nombre de la alarma",
+              hintText: l10n.alarmName,
               hintStyle: const TextStyle(color: _wordleTextSecondary),
               prefixIcon: const Icon(Icons.label_outline,
                   color: _wordleTextSecondary),
@@ -462,13 +468,13 @@ class _EditAlarmSheetState extends State<EditAlarmSheet> {
               children: [
                 _buildOptionRow(
                   icon: Icons.music_note_outlined,
-                  title: 'Tono de llamadas',
-                  subtitle: 'Sonido de alarma predeterminado',
+                  title: l10n.ringtoneSetting,
+                  subtitle: l10n.defaultAlarmSound,
                 ),
                 Divider(height: 1, color: _wordleBorder),
                 _buildOptionRow(
                   icon: Icons.vibration,
-                  title: 'Vibrar',
+                  title: l10n.vibrateLabel,
                   trailing: Switch(
                     value: _vibrate,
                     onChanged: (v) => setState(() => _vibrate = v),

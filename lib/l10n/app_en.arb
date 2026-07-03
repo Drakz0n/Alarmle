@@ -27,5 +27,111 @@
       }
     }
   },
-  "version": "Version 1.0.0"
+  "version": "Version 1.0.0",
+
+  "profileTitle": "Profile",
+  "online": "Online",
+  "offline": "Offline",
+  "noInternet": "No internet connection",
+  "guestName": "User",
+  "scoreLabel": "Score",
+  "pointsLabel": "{count} points",
+  "@pointsLabel": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "accumulatedPoints": "Accumulated points",
+  "accountLabel": "Account",
+  "nameLabel": "Name",
+  "emailLabel": "Email",
+  "signOut": "Sign out",
+  "loginToSync": "Sign in to sync your data and not lose it",
+  "loginOrRegister": "Sign in / Register",
+
+  "noData": "No data",
+  "noPlayersYet": "No players in the ranking yet",
+
+  "createAccount": "Create account",
+  "signIn": "Sign in",
+  "checkEmail": "Check your email",
+  "emailVerificationSent": "We sent a verification link to {email}",
+  "@emailVerificationSent": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "backToHome": "Back to home",
+  "or": "or",
+  "yourName": "Your name",
+  "enterEmail": "Enter your email",
+  "password": "Password",
+  "continueWithEmail": "Continue with email",
+  "haveAccountSignIn": "Already have an account? Sign in",
+  "noAccountRegister": "Don't have an account? Register",
+  "termsNotice": "By continuing, you agree to the Terms of Service and Privacy Policy.",
+  "continueWithGoogle": "Continue with Google",
+  "fillAllFields": "Fill in all fields",
+
+  "newAlarm": "New alarm",
+  "editAlarm": "Edit alarm",
+  "done": "Done",
+  "selectAtLeastOneDay": "Select at least one day",
+  "nextAlarmIn": "Next alarm in {time}",
+  "@nextAlarmIn": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "onceLabel": "Once",
+  "customizeLabel": "Customize",
+  "alarmName": "Alarm name",
+  "ringtoneSetting": "Ringtone",
+  "defaultAlarmSound": "Default alarm sound",
+  "vibrateLabel": "Vibrate",
+  "amLabel": "AM",
+  "pmLabel": "PM",
+  "monShort": "M",
+  "tueShort": "T",
+  "wedShort": "W",
+  "thuShort": "T",
+  "friShort": "F",
+  "satShort": "S",
+  "sunShort": "S",
+  "monLong": "Mon",
+  "tueLong": "Tue",
+  "wedLong": "Wed",
+  "thuLong": "Thu",
+  "friLong": "Fri",
+  "satLong": "Sat",
+  "sunLong": "Sun",
+  "ringOnce": "Ring once",
+  "everyDay": "Every day",
+  "weekdays": "Mon to Fri",
+  "noActiveAlarms": "No active alarms",
+
+  "youWon": "YOU WON",
+  "youLost": "YOU LOST",
+  "wordLabel": "Word: {word}",
+  "@wordLabel": {
+    "placeholders": {
+      "word": {
+        "type": "String"
+      }
+    }
+  },
+  "scoreCapsLabel": "SCORE: {count} PTS",
+  "@scoreCapsLabel": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  }
 }
