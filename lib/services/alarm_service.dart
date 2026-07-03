@@ -16,10 +16,16 @@ class AlarmService {
       triggerTime = triggerTime.add(const Duration(days: 1));
     }
 
+    // Resolver la ruta del asset de audio desde el campo ringtone del modelo
+    final ringtone = alarmModel.ringtone.isEmpty || alarmModel.ringtone == 'default'
+        ? 'alarm_tone.wav'
+        : alarmModel.ringtone;
+    final assetPath = 'assets/sounds/$ringtone';
+
     final settings = alarm_pkg.AlarmSettings(
       id: alarmModel.id.hashCode,
       dateTime: triggerTime,
-      assetAudioPath: 'assets/sounds/alarm_tone.mp3',
+      assetAudioPath: assetPath,
       loopAudio: true,
       vibrate: alarmModel.vibrate,
       volume: 1.0,
@@ -32,7 +38,7 @@ class AlarmService {
         stopButton: 'Descartar', // Requerido en las nuevas versiones
       ),
     );
-    
+
     await alarm_pkg.Alarm.set(alarmSettings: settings);
   }
 

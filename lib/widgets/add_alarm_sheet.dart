@@ -9,6 +9,13 @@ const _wordleTextSecondary = Color(0xFF8E8E93);
 const _wordleBorder = Color(0xFF3A3A3C);
 const _loopMultiplier = 1000;
 
+/// Mapa de ringtones disponibles: clave = nombre del archivo, valor = etiqueta legible.
+const _availableRingtones = <String, String>{
+  'alarm_tone.wav': 'Classic Alarm',
+  'alarm_beep.wav': 'Simple Beep',
+  'alarm_classic.wav': 'Melodic Tone',
+};
+
 class AddAlarmSheet extends StatefulWidget {
   final Function(Alarm) onAlarmAdded;
 
@@ -33,6 +40,7 @@ class _AddAlarmSheetState extends State<AddAlarmSheet> {
   final List<bool> _repeatDays = List.filled(7, false);
 
   bool _vibrate = true;
+  String _ringtone = 'alarm_tone.wav';
 
   @override
   void initState() {
@@ -123,10 +131,51 @@ class _AddAlarmSheetState extends State<AddAlarmSheet> {
         vibrate: _vibrate,
         snoozeMinutes: 5,
         snoozeCount: 3,
+        ringtone: _ringtone,
       ),
     );
 
     Navigator.pop(context);
+  }
+
+  Future<void> _selectRingtone() async {
+    final selected = await showDialog<String>(
+      context: context,
+      builder: (context) => SimpleDialog(
+        backgroundColor: _wordleSurfaceLight,
+        title: Text(
+          'Select Ringtone',
+          style: const TextStyle(color: _wordleTextPrimary),
+        ),
+        children: _availableRingtones.entries.map((entry) {
+          final isSelected = entry.key == _ringtone;
+          return SimpleDialogOption(
+            onPressed: () => Navigator.pop(context, entry.key),
+            child: Row(
+              children: [
+                Icon(
+                  isSelected ? Icons.radio_button_checked : Icons.radio_button_unchecked,
+                  color: isSelected ? _wordleGreen : _wordleTextSecondary,
+                  size: 20,
+                ),
+                const SizedBox(width: 12),
+                Text(
+                  entry.value,
+                  style: TextStyle(
+                    color: isSelected ? _wordleGreen : _wordleTextPrimary,
+                    fontSize: 15,
+                  ),
+                ),
+              ],
+            ),
+          );
+        }).toList(),
+      ),
+    );
+
+    if (selected != null && selected != _ringtone) {
+      setState(() => _ringtone = selected);
+    }
   }
 
   Widget _buildDrumPicker(AppLocalizations l10n) {
@@ -458,8 +507,8 @@ class _AddAlarmSheetState extends State<AddAlarmSheet> {
                 _buildOptionRow(
                   icon: Icons.music_note_outlined,
                   title: l10n.ringtoneSetting,
-                  subtitle: l10n.defaultAlarmSound,
-                  onTap: null,
+                  subtitle: _availableRingtones[_ringtone] ?? l10n.defaultAlarmSound,
+                  onTap: _selectRingtone,
                 ),
                 Divider(height: 1, color: _wordleBorder),
                 _buildOptionRow(

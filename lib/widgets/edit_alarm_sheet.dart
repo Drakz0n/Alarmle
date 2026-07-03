@@ -9,6 +9,13 @@ const _wordleTextSecondary = Color(0xFF8E8E93);
 const _wordleBorder = Color(0xFF3A3A3C);
 const _loopMultiplier = 1000;
 
+/// Mapa de ringtones disponibles: clave = nombre del archivo, valor = etiqueta legible.
+const _availableRingtones = <String, String>{
+  'alarm_tone.wav': 'Classic Alarm',
+  'alarm_beep.wav': 'Simple Beep',
+  'alarm_classic.wav': 'Melodic Tone',
+};
+
 class EditAlarmSheet extends StatefulWidget {
   final Alarm alarm;
   final Function(Alarm) onAlarmEdited;
@@ -35,6 +42,7 @@ class _EditAlarmSheetState extends State<EditAlarmSheet> {
   late bool _repeatOnce;
   late List<bool> _repeatDays;
   late bool _vibrate;
+  late String _ringtone;
 
   @override
   void initState() {
@@ -49,6 +57,9 @@ class _EditAlarmSheetState extends State<EditAlarmSheet> {
     _repeatOnce = !anyDay;
     _repeatDays = List<bool>.from(a.repeatDays);
     _vibrate = a.vibrate;
+    _ringtone = a.ringtone.isEmpty || a.ringtone == 'default'
+        ? 'alarm_tone.wav'
+        : a.ringtone;
 
     _titleController = TextEditingController(text: a.title);
 
@@ -134,10 +145,51 @@ class _EditAlarmSheetState extends State<EditAlarmSheet> {
       vibrate: _vibrate,
       snoozeMinutes: widget.alarm.snoozeMinutes,
       snoozeCount: widget.alarm.snoozeCount,
+      ringtone: _ringtone,
       isEnabled: widget.alarm.isEnabled,
     ));
 
     Navigator.pop(context);
+  }
+
+  Future<void> _selectRingtone() async {
+    final selected = await showDialog<String>(
+      context: context,
+      builder: (context) => SimpleDialog(
+        backgroundColor: _wordleSurfaceLight,
+        title: Text(
+          'Select Ringtone',
+          style: const TextStyle(color: _wordleTextPrimary),
+        ),
+        children: _availableRingtones.entries.map((entry) {
+          final isSelected = entry.key == _ringtone;
+          return SimpleDialogOption(
+            onPressed: () => Navigator.pop(context, entry.key),
+            child: Row(
+              children: [
+                Icon(
+                  isSelected ? Icons.radio_button_checked : Icons.radio_button_unchecked,
+                  color: isSelected ? _wordleGreen : _wordleTextSecondary,
+                  size: 20,
+                ),
+                const SizedBox(width: 12),
+                Text(
+                  entry.value,
+                  style: TextStyle(
+                    color: isSelected ? _wordleGreen : _wordleTextPrimary,
+                    fontSize: 15,
+                  ),
+                ),
+              ],
+            ),
+          );
+        }).toList(),
+      ),
+    );
+
+    if (selected != null && selected != _ringtone) {
+      setState(() => _ringtone = selected);
+    }
   }
 
   Widget _buildDrumPicker(AppLocalizations l10n) {
@@ -469,7 +521,8 @@ class _EditAlarmSheetState extends State<EditAlarmSheet> {
                 _buildOptionRow(
                   icon: Icons.music_note_outlined,
                   title: l10n.ringtoneSetting,
-                  subtitle: l10n.defaultAlarmSound,
+                  subtitle: _availableRingtones[_ringtone] ?? l10n.defaultAlarmSound,
+                  onTap: _selectRingtone,
                 ),
                 Divider(height: 1, color: _wordleBorder),
                 _buildOptionRow(
