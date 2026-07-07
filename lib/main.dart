@@ -1,11 +1,13 @@
 import 'dart:async';
 import 'package:alarm/alarm.dart' as alarm_package show Alarm;
 import 'package:alarmle/services/alarm_service.dart';
+import 'package:alarmle/services/core/conectivity_service.dart';
 import 'package:alarmle/viewmodels/alarm_view_model.dart';
 import 'package:alarmle/viewmodels/settings_view_model.dart';
 import 'package:alarmle/viewmodels/user_view_model.dart';
 import 'package:alarmle/screens/home_screen.dart';
 import 'package:alarmle/screens/wordle_alarm_screen.dart';
+import 'package:alarmle/widgets/connectivity_snackbar.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
@@ -53,6 +55,8 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   StreamSubscription? _alarmSub;
+  StreamSubscription<bool>? _connectivitySub;
+  bool? _lastConnectionState;
 
   Future<void> _requestPermissions() async {
     await Permission.notification.request();
@@ -70,6 +74,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await _requestPermissions();
       await _checkActiveAlarms();
+      _setupConnectivityListener();
     });
 
     _alarmSub = alarm_package.Alarm.ringStream.stream.listen((alarmSettings) {
@@ -81,7 +86,21 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     _alarmSub?.cancel();
+    _connectivitySub?.cancel();
     super.dispose();
+  }
+
+  void _setupConnectivityListener() {
+    final connectivityService = ConnectivityService();
+    _connectivitySub = connectivityService.onConnectivityChanged.listen((isConnected) {
+      if (_lastConnectionState != isConnected) {
+        _lastConnectionState = isConnected;
+        final context = globalNavigatorKey.currentContext;
+        if (context != null && context.mounted) {
+          ConnectivitySnackBar.show(context, isConnected);
+        }
+      }
+    });
   }
 
   @override
