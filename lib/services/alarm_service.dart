@@ -10,7 +10,13 @@ class AlarmService {
     await alarm_pkg.Alarm.init();
   }
 
-  Future<void> schedule(Alarm alarmModel, DateTime triggerTime) async {
+  Future<void> schedule(
+    Alarm alarmModel,
+    DateTime triggerTime, {
+    String? notificationTitle,
+    String? notificationBody,
+    String? stopButtonText,
+  }) async {
     final now = DateTime.now();
     if (triggerTime.isBefore(now)) {
       triggerTime = triggerTime.add(const Duration(days: 1));
@@ -35,10 +41,10 @@ class AlarmService {
       fadeDuration: 0.0,
       androidFullScreenIntent: true,
       // --- NUEVA SINTAXIS PARA LA NOTIFICACIÓN ---
-      notificationSettings: const alarm_pkg.NotificationSettings(
-        title: '¡Alarma!',
-        body: 'Resuelve el Wordle para detener la alarma',
-        stopButton: 'Descartar', // Requerido en las nuevas versiones
+      notificationSettings: alarm_pkg.NotificationSettings(
+        title: notificationTitle ?? '¡Alarma!',
+        body: notificationBody ?? 'Resuelve el Wordle para detener la alarma',
+        stopButton: stopButtonText ?? 'Descartar', // Requerido en las nuevas versiones
       ),
     );
 

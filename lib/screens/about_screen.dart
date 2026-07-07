@@ -79,7 +79,7 @@ class AboutScreen extends StatelessWidget {
                       Icon(Icons.info_outline, color: const Color(0xFF57AC57), size: 20),
                       const SizedBox(width: 8),
                       Text(
-                        'Acerca de Alarmle',
+                        l10n.aboutTitle,
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 16,
@@ -90,8 +90,7 @@ class AboutScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 12),
                   Text(
-                    'Alarmle es una aplicación de alarmas con integración de Wordle. '
-                    'Despierta cada mañana resolviendo el puzzle del día y pon a prueba tu mente.',
+                    l10n.aboutDescription,
                     style: TextStyle(
                       color: const Color(0xFF8E8E93),
                       fontSize: 14,
@@ -118,7 +117,7 @@ class AboutScreen extends StatelessWidget {
                       Icon(Icons.star_outline, color: const Color(0xFFC8B652), size: 20),
                       const SizedBox(width: 8),
                       Text(
-                        'Características',
+                        l10n.featuresTitle,
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 16,
@@ -130,26 +129,26 @@ class AboutScreen extends StatelessWidget {
                   const SizedBox(height: 12),
                   _FeatureItem(
                     icon: Icons.alarm,
-                    title: 'Alarmas personalizadas',
-                    description: 'Configura alarmas con repetición y sonidos personalizados',
+                    title: l10n.customAlarms,
+                    description: l10n.customAlarmsDesc,
                   ),
                   const SizedBox(height: 12),
                   _FeatureItem(
                     icon: Icons.emoji_events_outlined,
-                    title: 'Minijuego Wordle',
-                    description: 'Demuestra tu habilidad resolviendo el puzzle para apagar la alarma',
+                    title: l10n.wordleGame,
+                    description: l10n.wordleGameDesc,
                   ),
                   const SizedBox(height: 12),
                   _FeatureItem(
                     icon: Icons.sync_outlined,
-                    title: 'Sincronización en la nube',
-                    description: 'Sincroniza tus datos y puntuaciones con Firebase',
+                    title: l10n.cloudSync,
+                    description: l10n.cloudSyncDesc,
                   ),
                   const SizedBox(height: 12),
                   _FeatureItem(
                     icon: Icons.public,
-                    title: 'Multilenguaje',
-                    description: 'Disponible en español, inglés, francés, portugués y chino',
+                    title: l10n.multiLanguage,
+                    description: l10n.multiLanguageDesc,
                   ),
                 ],
               ),
@@ -171,7 +170,7 @@ class AboutScreen extends StatelessWidget {
                       Icon(Icons.code_outlined, color: const Color(0xFF57AC57), size: 20),
                       const SizedBox(width: 8),
                       Text(
-                        'Tecnologías',
+                        l10n.technologiesTitle,
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 16,
@@ -197,7 +196,7 @@ class AboutScreen extends StatelessWidget {
             const SizedBox(height: 32),
             // Copyright
             Text(
-              '© 2024 Alarmle. Todos los derechos reservados.',
+              l10n.copyright,
               style: TextStyle(
                 color: const Color(0xFF636366),
                 fontSize: 12,

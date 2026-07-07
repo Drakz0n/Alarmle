@@ -222,7 +222,7 @@ abstract class AppLocalizations {
   ///
   /// In en, this message translates to:
   /// **'{count} selected'**
-  String selectedCount(int count);
+  String selectedCount(Object count);
 
   /// No description provided for @version.
   ///
@@ -270,7 +270,7 @@ abstract class AppLocalizations {
   ///
   /// In en, this message translates to:
   /// **'{count} points'**
-  String pointsLabel(int count);
+  String pointsLabel(Object count);
 
   /// No description provided for @accumulatedPoints.
   ///
@@ -348,7 +348,7 @@ abstract class AppLocalizations {
   ///
   /// In en, this message translates to:
   /// **'We sent a verification link to {email}'**
-  String emailVerificationSent(String email);
+  String emailVerificationSent(Object email);
 
   /// No description provided for @backToHome.
   ///
@@ -444,7 +444,7 @@ abstract class AppLocalizations {
   ///
   /// In en, this message translates to:
   /// **'Next alarm in {time}'**
-  String nextAlarmIn(String time);
+  String nextAlarmIn(Object time);
 
   /// No description provided for @onceLabel.
   ///
@@ -618,13 +618,163 @@ abstract class AppLocalizations {
   ///
   /// In en, this message translates to:
   /// **'Word: {word}'**
-  String wordLabel(String word);
+  String wordLabel(Object word);
 
   /// No description provided for @scoreCapsLabel.
   ///
   /// In en, this message translates to:
   /// **'SCORE: {count} PTS'**
-  String scoreCapsLabel(int count);
+  String scoreCapsLabel(Object count);
+
+  /// No description provided for @aboutTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'About Alarmle'**
+  String get aboutTitle;
+
+  /// No description provided for @aboutDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Alarmle is an alarm app with Wordle integration. Wake up every morning solving the daily puzzle and test your mind.'**
+  String get aboutDescription;
+
+  /// No description provided for @featuresTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Features'**
+  String get featuresTitle;
+
+  /// No description provided for @customAlarms.
+  ///
+  /// In en, this message translates to:
+  /// **'Custom alarms'**
+  String get customAlarms;
+
+  /// No description provided for @customAlarmsDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Set alarms with repetition and custom sounds'**
+  String get customAlarmsDesc;
+
+  /// No description provided for @wordleGame.
+  ///
+  /// In en, this message translates to:
+  /// **'Wordle minigame'**
+  String get wordleGame;
+
+  /// No description provided for @wordleGameDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Show your skills solving the puzzle to turn off the alarm'**
+  String get wordleGameDesc;
+
+  /// No description provided for @cloudSync.
+  ///
+  /// In en, this message translates to:
+  /// **'Cloud sync'**
+  String get cloudSync;
+
+  /// No description provided for @cloudSyncDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Sync your data and scores with Firebase'**
+  String get cloudSyncDesc;
+
+  /// No description provided for @multiLanguage.
+  ///
+  /// In en, this message translates to:
+  /// **'Multilingual'**
+  String get multiLanguage;
+
+  /// No description provided for @multiLanguageDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Available in Spanish, English, French, Portuguese and Chinese'**
+  String get multiLanguageDesc;
+
+  /// No description provided for @technologiesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Technologies'**
+  String get technologiesTitle;
+
+  /// No description provided for @copyright.
+  ///
+  /// In en, this message translates to:
+  /// **'© 2024 Alarmle. All rights reserved.'**
+  String get copyright;
+
+  /// No description provided for @solveWordleToStop.
+  ///
+  /// In en, this message translates to:
+  /// **'Solve the Wordle to stop the alarm'**
+  String get solveWordleToStop;
+
+  /// No description provided for @dismissButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Dismiss'**
+  String get dismissButton;
+
+  /// No description provided for @languageEnglish.
+  ///
+  /// In en, this message translates to:
+  /// **'English'**
+  String get languageEnglish;
+
+  /// No description provided for @languageSpanish.
+  ///
+  /// In en, this message translates to:
+  /// **'Spanish'**
+  String get languageSpanish;
+
+  /// No description provided for @languageFrench.
+  ///
+  /// In en, this message translates to:
+  /// **'French'**
+  String get languageFrench;
+
+  /// No description provided for @languagePortuguese.
+  ///
+  /// In en, this message translates to:
+  /// **'Portuguese'**
+  String get languagePortuguese;
+
+  /// No description provided for @languageChinese.
+  ///
+  /// In en, this message translates to:
+  /// **'Chinese'**
+  String get languageChinese;
+
+  /// No description provided for @customLanguageLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Custom language'**
+  String get customLanguageLabel;
+
+  /// No description provided for @selectLanguageHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Select a language'**
+  String get selectLanguageHint;
+
+  /// No description provided for @nextAlarmDays.
+  ///
+  /// In en, this message translates to:
+  /// **'Next alarm in {days} day'**
+  String nextAlarmDays(Object days);
+
+  /// No description provided for @nextAlarmHours.
+  ///
+  /// In en, this message translates to:
+  /// **'{hours}h {mins}min'**
+  String nextAlarmHours(Object hours, Object mins);
+
+  /// No description provided for @nextAlarmMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'{mins} min'**
+  String nextAlarmMinutes(Object mins);
 }
 
 class _AppLocalizationsDelegate

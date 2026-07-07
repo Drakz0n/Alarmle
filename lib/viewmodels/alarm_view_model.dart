@@ -18,7 +18,7 @@ class AlarmViewModel extends ChangeNotifier
     notifyListeners();
   }
 
-  Future<void> addAlarm(Alarm alarm) async 
+  Future<void> addAlarm(Alarm alarm, {AppLocalizations? l10n}) async 
   {
     _alarms.add(alarm);
     //ordenar por hora del dia (de mas temprano a mas tarde)
@@ -32,12 +32,18 @@ class AlarmViewModel extends ChangeNotifier
     if (alarm.isEnabled) {
       final now = DateTime.now();
       final trigger = DateTime(now.year, now.month, now.day, alarm.hour, alarm.minute);
-      await AlarmService().schedule(alarm, trigger);
+      await AlarmService().schedule(
+        alarm, 
+        trigger,
+        notificationTitle: l10n?.aboutTitle ?? '¡Alarma!',
+        notificationBody: l10n?.solveWordleToStop ?? 'Resuelve el Wordle para detener la alarma',
+        stopButtonText: l10n?.dismissButton ?? 'Descartar',
+      );
     }
     notifyListeners();
   }
 
-  Future<void> toggleAlarm(String id, bool value) async
+  Future<void> toggleAlarm(String id, bool value, {AppLocalizations? l10n}) async
   {
     final index = _alarms.indexWhere((a) => a.id == id);
     if (index == -1) return;
@@ -48,7 +54,13 @@ class AlarmViewModel extends ChangeNotifier
     final trigger = DateTime(now.year, now.month, now.day, alarm.hour, alarm.minute);
 
     if (value) {
-      await AlarmService().schedule(alarm, trigger);
+      await AlarmService().schedule(
+        alarm, 
+        trigger,
+        notificationTitle: l10n?.aboutTitle ?? '¡Alarma!',
+        notificationBody: l10n?.solveWordleToStop ?? 'Resuelve el Wordle para detener la alarma',
+        stopButtonText: l10n?.dismissButton ?? 'Descartar',
+      );
     } else {
       await AlarmService().cancel(alarm.id.hashCode);
     }
@@ -65,7 +77,7 @@ class AlarmViewModel extends ChangeNotifier
     notifyListeners();
   }
 
-  Future<void> editAlarm(Alarm alarm) async 
+  Future<void> editAlarm(Alarm alarm, {AppLocalizations? l10n}) async 
   {
     final index = _alarms.indexWhere((a) => a.id == alarm.id);
     if (index == -1) return;
@@ -76,7 +88,13 @@ class AlarmViewModel extends ChangeNotifier
     if (alarm.isEnabled) {
       final now = DateTime.now();
       final trigger = DateTime(now.year, now.month, now.day, alarm.hour, alarm.minute);
-      await AlarmService().schedule(alarm, trigger);
+      await AlarmService().schedule(
+        alarm, 
+        trigger,
+        notificationTitle: l10n?.aboutTitle ?? '¡Alarma!',
+        notificationBody: l10n?.solveWordleToStop ?? 'Resuelve el Wordle para detener la alarma',
+        stopButtonText: l10n?.dismissButton ?? 'Descartar',
+      );
     }
     notifyListeners();
   }
@@ -125,10 +143,10 @@ class AlarmViewModel extends ChangeNotifier
     final mins  = diff.inMinutes % 60;
 
     if (days >= 1) {
-      if (hours > 0) return "Siguiente alarma en $days día${days > 1 ? 's' : ''} ${hours}h ${mins}min";
-      return "Siguiente alarma en $days día${days > 1 ? 's' : ''} y ${mins}min";
+      if (hours > 0) return '${l10n.nextAlarmDays(days)} ${l10n.nextAlarmHours(hours, mins)}';
+      return '${l10n.nextAlarmDays(days)} y ${l10n.nextAlarmMinutes(mins)}';
     }
-    if (hours > 0) return "Siguiente alarma en ${hours}h ${mins}min";
-    return "Siguiente alarma en $mins minuto${mins != 1 ? 's' : ''}";
+    if (hours > 0) return l10n.nextAlarmIn(l10n.nextAlarmHours(hours, mins));
+    return l10n.nextAlarmIn(l10n.nextAlarmMinutes(mins));
   }
 }

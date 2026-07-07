@@ -84,13 +84,13 @@ class _HomeScreenState extends State<HomeScreen> {
         initialChildSize: 0.92,
         minChildSize: 0.5,
         maxChildSize: 0.95,
-        builder: (context, scrollController) => SingleChildScrollView(
-          controller: scrollController,
-          child: AddAlarmSheet(
-            onAlarmAdded: (alarm) =>
-                context.read<AlarmViewModel>().addAlarm(alarm),
+          builder: (context, scrollController) => SingleChildScrollView(
+            controller: scrollController,
+            child: AddAlarmSheet(
+              onAlarmAdded: (alarm) =>
+                  context.read<AlarmViewModel>().addAlarm(alarm, l10n: AppLocalizations.of(context)),
+            ),
           ),
-        ),
       ),
     );
   }
@@ -108,14 +108,14 @@ class _HomeScreenState extends State<HomeScreen> {
         initialChildSize: 0.92,
         minChildSize: 0.5,
         maxChildSize: 0.95,
-        builder: (context, scrollController) => SingleChildScrollView(
-          controller: scrollController,
-          child: EditAlarmSheet(
-            alarm: alarm,
-            onAlarmEdited: (edited) =>
-                context.read<AlarmViewModel>().editAlarm(edited),
+          builder: (context, scrollController) => SingleChildScrollView(
+            controller: scrollController,
+            child: EditAlarmSheet(
+              alarm: alarm,
+              onAlarmEdited: (edited) =>
+                  context.read<AlarmViewModel>().editAlarm(edited, l10n: AppLocalizations.of(context)),
+            ),
           ),
-        ),
       ),
     );
   }
@@ -399,7 +399,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   : ListView.separated(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       itemCount: alarms.length,
-                      separatorBuilder: (_, __) =>
+                      separatorBuilder: (_, _) =>
                           const SizedBox(height: 8),
                       itemBuilder: (context, index) {
                         final alarm = alarms[index];
@@ -410,7 +410,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           onToggle: _selectionMode
                               ? (_) {}
                               : (val) =>
-                                  vm.toggleAlarm(alarm.id, val),
+                                  vm.toggleAlarm(alarm.id, val, l10n: l10n),
                           onDelete: () => vm.deleteAlarm(alarm.id),
                           selectionMode: _selectionMode,
                           isSelected: isSelected,

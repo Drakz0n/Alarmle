@@ -24,7 +24,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get ringtoneLabel => 'Sonnerie par défaut';
 
   @override
-  String get snoozeLabel => 'Minutes de report';
+  String get snoozeLabel => 'Minutes de répétition';
 
   @override
   String get volumeLabel => 'Volume de l\'application';
@@ -66,7 +66,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get deselectAll => 'Tout désélectionner';
 
   @override
-  String selectedCount(int count) {
+  String selectedCount(Object count) {
     return '$count sélectionnés';
   }
 
@@ -92,7 +92,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get scoreLabel => 'Score';
 
   @override
-  String pointsLabel(int count) {
+  String pointsLabel(Object count) {
     return '$count points';
   }
 
@@ -109,13 +109,14 @@ class AppLocalizationsFr extends AppLocalizations {
   String get emailLabel => 'E-mail';
 
   @override
-  String get signOut => 'Se déconnecter';
+  String get signOut => 'Déconnexion';
 
   @override
-  String get loginToSync => 'Connectez-vous pour synchroniser vos données';
+  String get loginToSync =>
+      'Connectez-vous pour synchroniser vos données et ne pas les perdre';
 
   @override
-  String get loginOrRegister => 'Se connecter / S\'inscrire';
+  String get loginOrRegister => 'Connexion / Inscription';
 
   @override
   String get noData => 'Aucune donnée';
@@ -133,7 +134,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get checkEmail => 'Vérifiez votre e-mail';
 
   @override
-  String emailVerificationSent(String email) {
+  String emailVerificationSent(Object email) {
     return 'Nous avons envoyé un lien de vérification à $email';
   }
 
@@ -156,10 +157,10 @@ class AppLocalizationsFr extends AppLocalizations {
   String get continueWithEmail => 'Continuer avec e-mail';
 
   @override
-  String get haveAccountSignIn => 'Vous avez déjà un compte ? Connectez-vous';
+  String get haveAccountSignIn => 'Vous avez déjà un compte? Connectez-vous';
 
   @override
-  String get noAccountRegister => 'Pas de compte ? Inscrivez-vous';
+  String get noAccountRegister => 'Vous n\'avez pas de compte? Inscrivez-vous';
 
   @override
   String get termsNotice =>
@@ -184,7 +185,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get selectAtLeastOneDay => 'Sélectionnez au moins un jour';
 
   @override
-  String nextAlarmIn(String time) {
+  String nextAlarmIn(Object time) {
     return 'Prochaine alarme dans $time';
   }
 
@@ -207,10 +208,10 @@ class AppLocalizationsFr extends AppLocalizations {
   String get vibrateLabel => 'Vibrer';
 
   @override
-  String get amLabel => 'a. m.';
+  String get amLabel => 'AM';
 
   @override
-  String get pmLabel => 'p. m.';
+  String get pmLabel => 'PM';
 
   @override
   String get monShort => 'L';
@@ -261,7 +262,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get everyDay => 'Tous les jours';
 
   @override
-  String get weekdays => 'Lundi à vendredi';
+  String get weekdays => 'Lun au Ven';
 
   @override
   String get noActiveAlarms => 'Aucune alarme active';
@@ -273,12 +274,98 @@ class AppLocalizationsFr extends AppLocalizations {
   String get youLost => 'PERDU';
 
   @override
-  String wordLabel(String word) {
+  String wordLabel(Object word) {
     return 'Mot: $word';
   }
 
   @override
-  String scoreCapsLabel(int count) {
+  String scoreCapsLabel(Object count) {
     return 'SCORE: $count PTS';
+  }
+
+  @override
+  String get aboutTitle => 'À propos d\'Alarmle';
+
+  @override
+  String get aboutDescription =>
+      'Alarmle est une application d\'alarme avec intégration Wordle. Réveillez-vous chaque matin en résolvant le puzzle quotidien et testez votre esprit.';
+
+  @override
+  String get featuresTitle => 'Fonctionnalités';
+
+  @override
+  String get customAlarms => 'Alarmes personnalisées';
+
+  @override
+  String get customAlarmsDesc =>
+      'Configurez des alarmes avec répétition et sons personnalisés';
+
+  @override
+  String get wordleGame => 'Mini-jeu Wordle';
+
+  @override
+  String get wordleGameDesc =>
+      'Montrez vos compétences en résolvant le puzzle pour éteindre l\'alarme';
+
+  @override
+  String get cloudSync => 'Synchronisation cloud';
+
+  @override
+  String get cloudSyncDesc =>
+      'Synchronisez vos données et scores avec Firebase';
+
+  @override
+  String get multiLanguage => 'Multilingue';
+
+  @override
+  String get multiLanguageDesc =>
+      'Disponible en espagnol, anglais, français, portugais et chinois';
+
+  @override
+  String get technologiesTitle => 'Technologies';
+
+  @override
+  String get copyright => '© 2024 Alarmle. Tous droits réservés.';
+
+  @override
+  String get solveWordleToStop => 'Résolvez le Wordle pour arrêter l\'alarme';
+
+  @override
+  String get dismissButton => 'Rejeter';
+
+  @override
+  String get languageEnglish => 'Anglais';
+
+  @override
+  String get languageSpanish => 'Espagnol';
+
+  @override
+  String get languageFrench => 'Français';
+
+  @override
+  String get languagePortuguese => 'Portugais';
+
+  @override
+  String get languageChinese => 'Chinois';
+
+  @override
+  String get customLanguageLabel => 'Langue personnalisée';
+
+  @override
+  String get selectLanguageHint => 'Sélectionnez une langue';
+
+  @override
+  String nextAlarmDays(Object days) {
+    return 'Prochaine alarme dans $days jour';
+  }
+
+  @override
+  String nextAlarmHours(Object hours, Object mins) {
+    return '$hours h $mins min';
+  }
+
+  @override
+  String nextAlarmMinutes(Object mins) {
+    return '$mins min';
   }
 }

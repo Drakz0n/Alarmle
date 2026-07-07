@@ -66,7 +66,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get deselectAll => 'Deselect all';
 
   @override
-  String selectedCount(int count) {
+  String selectedCount(Object count) {
     return '$count selected';
   }
 
@@ -92,7 +92,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get scoreLabel => 'Score';
 
   @override
-  String pointsLabel(int count) {
+  String pointsLabel(Object count) {
     return '$count points';
   }
 
@@ -133,7 +133,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get checkEmail => 'Check your email';
 
   @override
-  String emailVerificationSent(String email) {
+  String emailVerificationSent(Object email) {
     return 'We sent a verification link to $email';
   }
 
@@ -184,7 +184,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get selectAtLeastOneDay => 'Select at least one day';
 
   @override
-  String nextAlarmIn(String time) {
+  String nextAlarmIn(Object time) {
     return 'Next alarm in $time';
   }
 
@@ -273,12 +273,96 @@ class AppLocalizationsEn extends AppLocalizations {
   String get youLost => 'YOU LOST';
 
   @override
-  String wordLabel(String word) {
+  String wordLabel(Object word) {
     return 'Word: $word';
   }
 
   @override
-  String scoreCapsLabel(int count) {
+  String scoreCapsLabel(Object count) {
     return 'SCORE: $count PTS';
+  }
+
+  @override
+  String get aboutTitle => 'About Alarmle';
+
+  @override
+  String get aboutDescription =>
+      'Alarmle is an alarm app with Wordle integration. Wake up every morning solving the daily puzzle and test your mind.';
+
+  @override
+  String get featuresTitle => 'Features';
+
+  @override
+  String get customAlarms => 'Custom alarms';
+
+  @override
+  String get customAlarmsDesc => 'Set alarms with repetition and custom sounds';
+
+  @override
+  String get wordleGame => 'Wordle minigame';
+
+  @override
+  String get wordleGameDesc =>
+      'Show your skills solving the puzzle to turn off the alarm';
+
+  @override
+  String get cloudSync => 'Cloud sync';
+
+  @override
+  String get cloudSyncDesc => 'Sync your data and scores with Firebase';
+
+  @override
+  String get multiLanguage => 'Multilingual';
+
+  @override
+  String get multiLanguageDesc =>
+      'Available in Spanish, English, French, Portuguese and Chinese';
+
+  @override
+  String get technologiesTitle => 'Technologies';
+
+  @override
+  String get copyright => '© 2024 Alarmle. All rights reserved.';
+
+  @override
+  String get solveWordleToStop => 'Solve the Wordle to stop the alarm';
+
+  @override
+  String get dismissButton => 'Dismiss';
+
+  @override
+  String get languageEnglish => 'English';
+
+  @override
+  String get languageSpanish => 'Spanish';
+
+  @override
+  String get languageFrench => 'French';
+
+  @override
+  String get languagePortuguese => 'Portuguese';
+
+  @override
+  String get languageChinese => 'Chinese';
+
+  @override
+  String get customLanguageLabel => 'Custom language';
+
+  @override
+  String get selectLanguageHint => 'Select a language';
+
+  @override
+  String nextAlarmDays(Object days) {
+    return 'Next alarm in $days day';
+  }
+
+  @override
+  String nextAlarmHours(Object hours, Object mins) {
+    return '${hours}h ${mins}min';
+  }
+
+  @override
+  String nextAlarmMinutes(Object mins) {
+    return '$mins min';
   }
 }

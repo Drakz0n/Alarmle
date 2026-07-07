@@ -24,10 +24,10 @@ class AppLocalizationsPt extends AppLocalizations {
   String get ringtoneLabel => 'Toque padrão';
 
   @override
-  String get snoozeLabel => 'Minutos de adiar';
+  String get snoozeLabel => 'Minutos de soneca';
 
   @override
-  String get volumeLabel => 'Volume do app';
+  String get volumeLabel => 'Volume do aplicativo';
 
   @override
   String get languageLabel => 'Idioma';
@@ -51,7 +51,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get noAlarms => 'Sem alarmes';
 
   @override
-  String get addAlarmHint => 'Toque + para adicionar um';
+  String get addAlarmHint => 'Toque + para adicionar';
 
   @override
   String get cancel => 'Cancelar';
@@ -63,10 +63,10 @@ class AppLocalizationsPt extends AppLocalizations {
   String get selectAll => 'Selecionar tudo';
 
   @override
-  String get deselectAll => 'Desselecionar tudo';
+  String get deselectAll => 'Desmarcar tudo';
 
   @override
-  String selectedCount(int count) {
+  String selectedCount(Object count) {
     return '$count selecionados';
   }
 
@@ -80,10 +80,10 @@ class AppLocalizationsPt extends AppLocalizations {
   String get online => 'Online';
 
   @override
-  String get offline => 'Sem conexão';
+  String get offline => 'Offline';
 
   @override
-  String get noInternet => 'Sem conexão à internet';
+  String get noInternet => 'Sem conexão com a internet';
 
   @override
   String get guestName => 'Usuário';
@@ -92,7 +92,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get scoreLabel => 'Pontuação';
 
   @override
-  String pointsLabel(int count) {
+  String pointsLabel(Object count) {
     return '$count pontos';
   }
 
@@ -112,16 +112,17 @@ class AppLocalizationsPt extends AppLocalizations {
   String get signOut => 'Sair';
 
   @override
-  String get loginToSync => 'Entre para sincronizar seus dados e não perdê-los';
+  String get loginToSync =>
+      'Faça login para sincronizar seus dados e não perdê-los';
 
   @override
-  String get loginOrRegister => 'Entrar / Registrar';
+  String get loginOrRegister => 'Entrar / Cadastrar';
 
   @override
   String get noData => 'Sem dados';
 
   @override
-  String get noPlayersYet => 'Ainda não há jogadores no ranking';
+  String get noPlayersYet => 'Nenhum jogador no ranking ainda';
 
   @override
   String get createAccount => 'Criar conta';
@@ -133,7 +134,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get checkEmail => 'Verifique seu e-mail';
 
   @override
-  String emailVerificationSent(String email) {
+  String emailVerificationSent(Object email) {
     return 'Enviamos um link de verificação para $email';
   }
 
@@ -156,14 +157,14 @@ class AppLocalizationsPt extends AppLocalizations {
   String get continueWithEmail => 'Continuar com e-mail';
 
   @override
-  String get haveAccountSignIn => 'Já tem conta? Entre';
+  String get haveAccountSignIn => 'Já tem uma conta? Entre';
 
   @override
-  String get noAccountRegister => 'Não tem conta? Registre-se';
+  String get noAccountRegister => 'Não tem uma conta? Cadastre-se';
 
   @override
   String get termsNotice =>
-      'Ao continuar, você concorda com os Termos de Serviço e Política de Privacidade.';
+      'Ao continuar, você concorda com os Termos de Serviço e a Política de Privacidade.';
 
   @override
   String get continueWithGoogle => 'Continuar com Google';
@@ -184,7 +185,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get selectAtLeastOneDay => 'Selecione pelo menos um dia';
 
   @override
-  String nextAlarmIn(String time) {
+  String nextAlarmIn(Object time) {
     return 'Próximo alarme em $time';
   }
 
@@ -207,10 +208,10 @@ class AppLocalizationsPt extends AppLocalizations {
   String get vibrateLabel => 'Vibrar';
 
   @override
-  String get amLabel => 'a. m.';
+  String get amLabel => 'AM';
 
   @override
-  String get pmLabel => 'p. m.';
+  String get pmLabel => 'PM';
 
   @override
   String get monShort => 'S';
@@ -261,24 +262,110 @@ class AppLocalizationsPt extends AppLocalizations {
   String get everyDay => 'Todos os dias';
 
   @override
-  String get weekdays => 'Segunda a sexta';
+  String get weekdays => 'Seg a Sex';
 
   @override
   String get noActiveAlarms => 'Sem alarmes ativos';
 
   @override
-  String get youWon => 'VENCEU';
+  String get youWon => 'VOCÊ GANHOU';
 
   @override
-  String get youLost => 'PERDEU';
+  String get youLost => 'VOCÊ PERDEU';
 
   @override
-  String wordLabel(String word) {
+  String wordLabel(Object word) {
     return 'Palavra: $word';
   }
 
   @override
-  String scoreCapsLabel(int count) {
+  String scoreCapsLabel(Object count) {
     return 'PONTOS: $count PTS';
+  }
+
+  @override
+  String get aboutTitle => 'Sobre o Alarmle';
+
+  @override
+  String get aboutDescription =>
+      'Alarmle é um aplicativo de alarme com integração Wordle. Acorde todas as manhãs resolvendo o puzzle diário e teste sua mente.';
+
+  @override
+  String get featuresTitle => 'Recursos';
+
+  @override
+  String get customAlarms => 'Alarmes personalizados';
+
+  @override
+  String get customAlarmsDesc =>
+      'Configure alarmes com repetição e sons personalizados';
+
+  @override
+  String get wordleGame => 'Minijogo Wordle';
+
+  @override
+  String get wordleGameDesc =>
+      'Mostre suas habilidades resolvendo o puzzle para desligar o alarme';
+
+  @override
+  String get cloudSync => 'Sincronização em nuvem';
+
+  @override
+  String get cloudSyncDesc =>
+      'Sincronize seus dados e pontuações com o Firebase';
+
+  @override
+  String get multiLanguage => 'Multilíngue';
+
+  @override
+  String get multiLanguageDesc =>
+      'Disponível em espanhol, inglês, francês, português e chinês';
+
+  @override
+  String get technologiesTitle => 'Tecnologias';
+
+  @override
+  String get copyright => '© 2024 Alarmle. Todos os direitos reservados.';
+
+  @override
+  String get solveWordleToStop => 'Resolva o Wordle para parar o alarme';
+
+  @override
+  String get dismissButton => 'Descartar';
+
+  @override
+  String get languageEnglish => 'Inglês';
+
+  @override
+  String get languageSpanish => 'Espanhol';
+
+  @override
+  String get languageFrench => 'Francês';
+
+  @override
+  String get languagePortuguese => 'Português';
+
+  @override
+  String get languageChinese => 'Chinês';
+
+  @override
+  String get customLanguageLabel => 'Idioma personalizado';
+
+  @override
+  String get selectLanguageHint => 'Selecione um idioma';
+
+  @override
+  String nextAlarmDays(Object days) {
+    return 'Próximo alarme em $days dia';
+  }
+
+  @override
+  String nextAlarmHours(Object hours, Object mins) {
+    return '$hours h $mins min';
+  }
+
+  @override
+  String nextAlarmMinutes(Object mins) {
+    return '$mins min';
   }
 }

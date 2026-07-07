@@ -21,17 +21,6 @@ class SettingsScreen extends StatelessWidget {
     Locale('zh'),
   ];
 
-  static const _localeLabels = {
-    'es': 'Español',
-    'en': 'Inglés',
-    'pt': 'Portugués',
-    'fr': 'Francés',
-    'zh': 'Mandarín',
-  };
-
-  static const _customLanguageLabel = 'Idioma personalizado';
-  static const _selectLanguageHint = 'Seleccione un idioma';
-
   @override
   Widget build(BuildContext context) {
     final vm = context.watch<SettingsViewModel>();
@@ -94,7 +83,7 @@ class SettingsScreen extends StatelessWidget {
                 const SizedBox(height: 32),
 
                 // ─── Idioma personalizado ───
-                _SectionLabel(_customLanguageLabel),
+                _SectionLabel(l10n.customLanguageLabel),
                 const SizedBox(height: 8),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -107,7 +96,7 @@ class SettingsScreen extends StatelessWidget {
                     child: DropdownButton<Locale>(
                       value: vm.currentLocale,
                       hint: Text(
-                        _selectLanguageHint,
+                        l10n.selectLanguageHint,
                         style: const TextStyle(color: _wordleTextSecondary, fontSize: 16),
                       ),
                       dropdownColor: _wordleSurface,
@@ -117,14 +106,17 @@ class SettingsScreen extends StatelessWidget {
                         DropdownMenuItem<Locale>(
                           value: null,
                           child: Text(
-                            _selectLanguageHint,
+                            l10n.selectLanguageHint,
                             style: const TextStyle(color: _wordleTextSecondary),
                           ),
                         ),
-                        ..._locales.map((l) => DropdownMenuItem(
-                              value: l,
-                              child: Text(_localeLabels[l.languageCode] ?? l.languageCode),
-                            )),
+                        ..._locales.map((l) {
+                          final label = _getLanguageLabel(l10n, l.languageCode);
+                          return DropdownMenuItem(
+                            value: l,
+                            child: Text(label),
+                          );
+                        }),
                       ],
                       onChanged: (locale) {
                         if (locale != null) {
@@ -137,6 +129,23 @@ class SettingsScreen extends StatelessWidget {
               ],
             ),
     );
+  }
+
+  String _getLanguageLabel(AppLocalizations l10n, String code) {
+    switch (code) {
+      case 'es':
+        return l10n.languageSpanish;
+      case 'en':
+        return l10n.languageEnglish;
+      case 'pt':
+        return l10n.languagePortuguese;
+      case 'fr':
+        return l10n.languageFrench;
+      case 'zh':
+        return l10n.languageChinese;
+      default:
+        return code;
+    }
   }
 }
 
