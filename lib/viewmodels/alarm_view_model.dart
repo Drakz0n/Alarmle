@@ -91,32 +91,44 @@ class AlarmViewModel extends ChangeNotifier
     //busca la proxima alarma que se activara
     DateTime? nextTrigger;
 
-    for (final alarm in enabled) 
-    {
-      final todayTrigger = DateTime(now.year, now.month, now.day, alarm.hour, alarm.minute);
-      
-      //si la hora de hoy aun no ha pasado, es candidata
-      final candidate = todayTrigger.isAfter(now) ? todayTrigger : todayTrigger.add(const Duration(days: 1));
+    for (final alarm in enabled) {
+      DateTime? trigger;
+      final anyDay = alarm.repeatDays.any((d) => d);
 
-      if (nextTrigger == null || candidate.isBefore(nextTrigger)) 
-      {
-        nextTrigger = candidate;
+      if (!anyDay) {
+        final today = DateTime(now.year, now.month, now.day, alarm.hour, alarm.minute);
+        trigger = today.isAfter(now)
+            ? today
+            : today.add(const Duration(days: 1));
+      } else {
+        for (int offset = 0; offset < 7; offset++) {
+          final candidate = DateTime(
+            now.year, now.month, now.day, alarm.hour, alarm.minute,
+          ).add(Duration(days: offset));
+          if (alarm.repeatDays[candidate.weekday - 1] && candidate.isAfter(now)) {
+            trigger = candidate;
+            break;
+          }
+        }
+      }
+
+      if (trigger != null && (nextTrigger == null || trigger.isBefore(nextTrigger))) {
+        nextTrigger = trigger;
       }
     }
 
     if (nextTrigger == null) return l10n.noActiveAlarms;
 
-    final diff = nextTrigger.difference(now);
-    final hours = diff.inHours;
-    final minutes = diff.inMinutes % 60;
+    final diff  = nextTrigger.difference(now);
+    final days  = diff.inDays;
+    final hours = diff.inHours % 24;
+    final mins  = diff.inMinutes % 60;
 
-    if (hours >= 24) 
-    {
-      final days = diff.inDays;
-      return l10n.nextAlarmIn("$days d");
+    if (days >= 1) {
+      if (hours > 0) return "Siguiente alarma en $days día${days > 1 ? 's' : ''} ${hours}h ${mins}min";
+      return "Siguiente alarma en $days día${days > 1 ? 's' : ''} y ${mins}min";
     }
-    
-    if (hours > 0) return l10n.nextAlarmIn("${hours}h ${minutes}min");
-    return l10n.nextAlarmIn("$minutes min");
+    if (hours > 0) return "Siguiente alarma en ${hours}h ${mins}min";
+    return "Siguiente alarma en $mins minuto${mins != 1 ? 's' : ''}";
   }
 }

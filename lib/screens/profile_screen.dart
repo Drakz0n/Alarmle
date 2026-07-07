@@ -258,19 +258,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ],
                         ),
                       ),
-                      FilledButton(
-                        onPressed: () => vm.incrementScore(),
-                        style: FilledButton.styleFrom(
-                          backgroundColor: wordleGreen,
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 16, vertical: 10),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10)),
-                        ),
-                        child: const Text('+1',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 15)),
-                      ),
                     ],
                   ),
                 ),

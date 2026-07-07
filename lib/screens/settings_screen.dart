@@ -29,6 +29,9 @@ class SettingsScreen extends StatelessWidget {
     'zh': 'Mandarín',
   };
 
+  static const _customLanguageLabel = 'Idioma personalizado';
+  static const _selectLanguageHint = 'Seleccione un idioma';
+
   @override
   Widget build(BuildContext context) {
     final vm = context.watch<SettingsViewModel>();
@@ -90,8 +93,8 @@ class SettingsScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 32),
 
-                // ─── Idioma ───
-                _SectionLabel(l10n.languageLabel),
+                // ─── Idioma personalizado ───
+                _SectionLabel(_customLanguageLabel),
                 const SizedBox(height: 8),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -102,16 +105,27 @@ class SettingsScreen extends StatelessWidget {
                   ),
                   child: DropdownButtonHideUnderline(
                     child: DropdownButton<Locale>(
-                      value: vm.currentLocale ?? _locales.first,
+                      value: vm.currentLocale,
+                      hint: Text(
+                        _selectLanguageHint,
+                        style: const TextStyle(color: _wordleTextSecondary, fontSize: 16),
+                      ),
                       dropdownColor: _wordleSurface,
                       icon: const Icon(Icons.arrow_drop_down, color: _wordleGreen),
                       style: const TextStyle(color: Colors.white, fontSize: 16),
-                      items: _locales
-                          .map((l) => DropdownMenuItem(
-                                value: l,
-                                child: Text(_localeLabels[l.languageCode] ?? l.languageCode),
-                              ))
-                          .toList(),
+                      items: [
+                        DropdownMenuItem<Locale>(
+                          value: null,
+                          child: Text(
+                            _selectLanguageHint,
+                            style: const TextStyle(color: _wordleTextSecondary),
+                          ),
+                        ),
+                        ..._locales.map((l) => DropdownMenuItem(
+                              value: l,
+                              child: Text(_localeLabels[l.languageCode] ?? l.languageCode),
+                            )),
+                      ],
                       onChanged: (locale) {
                         if (locale != null) {
                           context.read<SettingsViewModel>().changeLocale(locale);
