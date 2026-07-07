@@ -7,9 +7,45 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:254860124463:android:0630651c0cd09f14ccc1da",
+        "mobilesdk_app_id": "1:254860124463:android:6fb38c7725948a22ccc1da",
         "android_client_info": {
           "package_name": "com.CapyOtter.alarmle"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "254860124463-sbm6pjqp81auu0vdh60m5ma0ipu7sajm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBw8KLqFUXzgJQqML9Vpc0URXMJUelg0ew"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "254860124463-sbm6pjqp81auu0vdh60m5ma0ipu7sajm.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "254860124463-gm1v5k8jdol9q5u915049p277eu98l3c.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.alarmle"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:254860124463:android:0630651c0cd09f14ccc1da",
+        "android_client_info": {
+          "package_name": "com.example.alarmle"
         }
       },
       "oauth_client": [
@@ -17,7 +53,7 @@
           "client_id": "254860124463-5qjhbd2tllbjltqbbii1bd6ccb6jsd2s.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.CapyOtter.alarmle",
+            "package_name": "com.example.alarmle",
             "certificate_hash": "5536dd5a45d9c87dbb8190612bd9b547c52f862e"
           }
         },
@@ -42,7 +78,7 @@
               "client_id": "254860124463-gm1v5k8jdol9q5u915049p277eu98l3c.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.CapyOtter.alarmle"
+                "bundle_id": "com.example.alarmle"
               }
             }
           ]

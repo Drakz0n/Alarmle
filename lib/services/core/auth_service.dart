@@ -14,11 +14,13 @@ class AuthService
   Future<void> _ensureGoogleInitialized() async 
   {
     if (_googleInitialized) return;
-    await _googleSignIn.initialize();
+    await _googleSignIn.initialize
+    (
+      serverClientId: '254860124463-sbm6pjqp81auu0vdh60m5ma0ipu7sajm.apps.googleusercontent.com',
+    );
     _googleInitialized = true;
   }
 
-  //google
   Future<UserCredential?> signInWithGoogle() async 
   {
     await _ensureGoogleInitialized();
@@ -26,21 +28,23 @@ class AuthService
     try 
     {
       final GoogleSignInAccount googleUser = await _googleSignIn.authenticate();
-
       final GoogleSignInAuthentication googleAuth = googleUser.authentication;
 
-      final credential = GoogleAuthProvider.credential
-      (
-        idToken: googleAuth.idToken,
-      );
+      if (googleAuth.idToken == null) {
+        throw Exception('idToken nulo: revisa serverClientId o Google Play Services en el dispositivo');
+      }
 
+      final credential = GoogleAuthProvider.credential(idToken: googleAuth.idToken);
       return await _auth.signInWithCredential(credential);
+
     } on GoogleSignInException catch (e) 
     {
-      if (e.code == GoogleSignInExceptionCode.canceled) 
-      {
-        return null; 
-      }
+      if (e.code == GoogleSignInExceptionCode.canceled) return null;
+      print('GoogleSignInException: ${e.code} - ${e.description}');
+      rethrow;
+    } catch (e) 
+    {
+      print('Error inesperado en signInWithGoogle: $e');
       rethrow;
     }
   }

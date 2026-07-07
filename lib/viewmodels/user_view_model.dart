@@ -96,6 +96,8 @@ class UserViewModel extends ChangeNotifier
 
     final remote = await _firestore.getUser(uid, localPhotoPath: localPhotoPath);
 
+    
+
     if (remote != null) 
     {
       //si habia datos locales y el score local es mayor, actualizar firestore
