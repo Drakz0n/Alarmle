@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../viewmodels/user_view_model.dart';
 import '../main.dart'; // para las constantes wordle*
 import '../l10n/app_localizations.dart';
+import 'home_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -34,7 +35,13 @@ class _LoginScreenState extends State<LoginScreen> {
     final error = await vm.signInWithGoogle();
     if (!mounted) return;
     if (error != null) setState(() => _errorMessage = error);
-    else Navigator.pop(context);
+    else {
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (_) => const HomeScreen()),
+        (route) => false,
+      );
+    }
   }
 
   Future<void> _handleEmail() async {
@@ -65,7 +72,11 @@ class _LoginScreenState extends State<LoginScreen> {
     } else if (result != null) {
       setState(() => _errorMessage = result);
     } else {
-      Navigator.pop(context);
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (_) => const HomeScreen()),
+        (route) => false,
+      );
     }
   }
 
