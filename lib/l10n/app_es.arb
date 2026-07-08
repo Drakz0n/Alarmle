@@ -111,5 +111,10 @@
   "selectLanguageHint": "Seleccione un idioma",
   "nextAlarmDays": "Próxima alarma en {days} día",
   "nextAlarmHours": "{hours} h {mins} min",
-  "nextAlarmMinutes": "{mins} min"
+  "nextAlarmMinutes": "{mins} min",
+  "deleteAccount": "Eliminar cuenta",
+  "deleteAccountConfirmTitle": "Eliminar cuenta",
+  "deleteAccountConfirmMessage": "¿Estás seguro? Esta acción no se puede deshacer.",
+  "recentLoginRequired": "Por favor inicia sesión nuevamente para eliminar tu cuenta",
+  "deleteAccountError": "Error al eliminar la cuenta. Por favor intenta de nuevo."
 }

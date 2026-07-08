@@ -111,5 +111,10 @@
   "selectLanguageHint": "选择语言",
   "nextAlarmDays": "下次闹钟在 {days} 天",
   "nextAlarmHours": "{hours} 小时 {mins} 分钟",
-  "nextAlarmMinutes": "{mins} 分钟"
+  "nextAlarmMinutes": "{mins} 分钟",
+  "deleteAccount": "删除账户",
+  "deleteAccountConfirmTitle": "删除账户",
+  "deleteAccountConfirmMessage": "您确定吗？此操作无法撤销。",
+  "recentLoginRequired": "请重新登录以删除您的账户",
+  "deleteAccountError": "删除账户时出错。请重试。"
 }

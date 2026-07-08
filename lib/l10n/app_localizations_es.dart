@@ -368,4 +368,22 @@ class AppLocalizationsEs extends AppLocalizations {
   String nextAlarmMinutes(Object mins) {
     return '$mins min';
   }
+
+  @override
+  String get deleteAccount => 'Eliminar cuenta';
+
+  @override
+  String get deleteAccountConfirmTitle => 'Eliminar cuenta';
+
+  @override
+  String get deleteAccountConfirmMessage =>
+      '¿Estás seguro? Esta acción no se puede deshacer.';
+
+  @override
+  String get recentLoginRequired =>
+      'Por favor inicia sesión nuevamente para eliminar tu cuenta';
+
+  @override
+  String get deleteAccountError =>
+      'Error al eliminar la cuenta. Por favor intenta de nuevo.';
 }

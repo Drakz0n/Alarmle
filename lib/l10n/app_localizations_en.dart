@@ -365,4 +365,21 @@ class AppLocalizationsEn extends AppLocalizations {
   String nextAlarmMinutes(Object mins) {
     return '$mins min';
   }
+
+  @override
+  String get deleteAccount => 'Delete account';
+
+  @override
+  String get deleteAccountConfirmTitle => 'Delete account';
+
+  @override
+  String get deleteAccountConfirmMessage =>
+      'Are you sure? This action cannot be undone.';
+
+  @override
+  String get recentLoginRequired =>
+      'Please log in again to delete your account';
+
+  @override
+  String get deleteAccountError => 'Error deleting account. Please try again.';
 }

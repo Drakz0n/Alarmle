@@ -362,4 +362,19 @@ class AppLocalizationsZh extends AppLocalizations {
   String nextAlarmMinutes(Object mins) {
     return '$mins 分钟';
   }
+
+  @override
+  String get deleteAccount => '删除账户';
+
+  @override
+  String get deleteAccountConfirmTitle => '删除账户';
+
+  @override
+  String get deleteAccountConfirmMessage => '您确定吗？此操作无法撤销。';
+
+  @override
+  String get recentLoginRequired => '请重新登录以删除您的账户';
+
+  @override
+  String get deleteAccountError => '删除账户时出错。请重试。';
 }

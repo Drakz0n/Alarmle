@@ -310,7 +310,72 @@ class _ProfileScreenState extends State<ProfileScreen> {
             if (mounted) Navigator.pop(context);
           },
         ),
+        ListTile(
+          leading: const Icon(Icons.delete_forever, color: Colors.red, size: 20),
+          title: Text(l10n.deleteAccount,
+              style: const TextStyle(color: Colors.red, fontSize: 15)),
+          onTap: () => _showDeleteAccountDialog(vm, l10n),
+        ),
       ],
+    );
+  }
+
+  void _showDeleteAccountDialog(UserViewModel vm, AppLocalizations l10n) {
+    showDialog(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        backgroundColor: wordleSurface,
+        title: Text(
+          l10n.deleteAccountConfirmTitle,
+          style: const TextStyle(color: Colors.white, fontSize: 18),
+        ),
+        content: Text(
+          l10n.deleteAccountConfirmMessage,
+          style: TextStyle(color: wordleTextSecondary, fontSize: 14),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext),
+            child: Text(
+              l10n.cancel,
+              style: const TextStyle(color: wordleTextSecondary),
+            ),
+          ),
+          TextButton(
+            onPressed: () async {
+              Navigator.pop(dialogContext);
+              final error = await vm.deleteAccount();
+              if (!mounted) return;
+
+              if (error == null) {
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (_) => const LoginScreen()),
+                  (route) => false,
+                );
+              } else if (error == 'recent_login_required') {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(l10n.recentLoginRequired),
+                    backgroundColor: Colors.orange,
+                  ),
+                );
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(l10n.deleteAccountError),
+                    backgroundColor: Colors.red,
+                  ),
+                );
+              }
+            },
+            child: Text(
+              l10n.delete,
+              style: const TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+            ),
+          ),
+        ],
+      ),
     );
   }
 

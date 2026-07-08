@@ -111,5 +111,10 @@
   "selectLanguageHint": "Select a language",
   "nextAlarmDays": "Next alarm in {days} day",
   "nextAlarmHours": "{hours}h {mins}min",
-  "nextAlarmMinutes": "{mins} min"
+  "nextAlarmMinutes": "{mins} min",
+  "deleteAccount": "Delete account",
+  "deleteAccountConfirmTitle": "Delete account",
+  "deleteAccountConfirmMessage": "Are you sure? This action cannot be undone.",
+  "recentLoginRequired": "Please log in again to delete your account",
+  "deleteAccountError": "Error deleting account. Please try again."
 }

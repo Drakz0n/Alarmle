@@ -775,6 +775,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{mins} min'**
   String nextAlarmMinutes(Object mins);
+
+  /// No description provided for @deleteAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete account'**
+  String get deleteAccount;
+
+  /// No description provided for @deleteAccountConfirmTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete account'**
+  String get deleteAccountConfirmTitle;
+
+  /// No description provided for @deleteAccountConfirmMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure? This action cannot be undone.'**
+  String get deleteAccountConfirmMessage;
+
+  /// No description provided for @recentLoginRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please log in again to delete your account'**
+  String get recentLoginRequired;
+
+  /// No description provided for @deleteAccountError.
+  ///
+  /// In en, this message translates to:
+  /// **'Error deleting account. Please try again.'**
+  String get deleteAccountError;
 }
 
 class _AppLocalizationsDelegate

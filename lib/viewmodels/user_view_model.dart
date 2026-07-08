@@ -233,6 +233,53 @@ class UserViewModel extends ChangeNotifier
     notifyListeners();
   }
 
+  //eliminar cuenta
+  Future<String?> deleteAccount() async 
+  {
+    if (_user == null || !isLoggedIn) return null;
+
+    _isLoading = true;
+    notifyListeners();
+
+    try 
+    {
+      final uid = _user!.uid;
+
+      //eliminar de firestore
+      if (_isConnected) 
+      {
+        await _firestore.deleteUser(uid);
+      }
+
+      //eliminar de firebase auth
+      await _auth.deleteAccount();
+
+      //limpiar datos locales
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove('user_data');
+      await prefs.remove('pending_sync');
+      _user = UserModel.guest();
+      _hasPendingSync = false;
+
+      notifyListeners();
+      return null;
+    } on FirebaseAuthException catch (e) 
+    {
+      if (e.code == 'requires-recent-login') 
+      {
+        return 'recent_login_required';
+      }
+      return e.toString();
+    } catch (e) 
+    {
+      return e.toString();
+    } finally 
+    {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
   //cambiar nombre
   Future<void> updateName(String name) async 
   {

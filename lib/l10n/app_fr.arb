@@ -111,5 +111,10 @@
   "selectLanguageHint": "Sélectionnez une langue",
   "nextAlarmDays": "Prochaine alarme dans {days} jour",
   "nextAlarmHours": "{hours} h {mins} min",
-  "nextAlarmMinutes": "{mins} min"
+  "nextAlarmMinutes": "{mins} min",
+  "deleteAccount": "Supprimer le compte",
+  "deleteAccountConfirmTitle": "Supprimer le compte",
+  "deleteAccountConfirmMessage": "Êtes-vous sûr ? Cette action est irréversible.",
+  "recentLoginRequired": "Veuillez vous reconnecter pour supprimer votre compte",
+  "deleteAccountError": "Erreur lors de la suppression du compte. Veuillez réessayer."
 }

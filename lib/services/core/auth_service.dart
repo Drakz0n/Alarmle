@@ -89,6 +89,14 @@ class AuthService
     await _auth.signOut();
   }
 
+  //eliminar cuenta
+  Future<void> deleteAccount() async 
+  {
+    await _ensureGoogleInitialized();
+    await _googleSignIn.signOut();
+    await _auth.currentUser?.delete();
+  }
+
   bool get isEmailVerified => _auth.currentUser?.emailVerified ?? false;
   String? get googlePhotoUrl => _auth.currentUser?.photoURL;
 }
