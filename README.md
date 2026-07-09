@@ -438,7 +438,9 @@ Ingeniería en Desarrollo de Videojuegos y Realidad Virtual
 # 📬 Contacto
 
 En caso de dudas, consultas o querer reportar algun error dentro de la app, comunicarse con alguno de los autores a traves de los siguiente correos:
+
 capi.bara.mp.2026@gmail.com
+
 drakzoncode@gmail.com
 
 </p>
