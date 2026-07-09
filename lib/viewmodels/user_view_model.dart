@@ -298,16 +298,24 @@ class UserViewModel extends ChangeNotifier
     notifyListeners();
   }
 
-  //boton de prueba para aumentar puntaje
-  Future<void> incrementScore() async 
+  //sumar puntos desde el minijuego Wordle (u otras fuentes)
+  Future<void> addScore(int points) async 
   {
     if (_user == null) return;
-    _user!.score++;
+    _user!.score += points;
 
     if (isLoggedIn && _isConnected) 
     {
-      await _firestore.updateScore(_user!.uid, _user!.score);
-      await _saveToLocal(pendingSync: false);
+      try 
+      {
+        await _firestore.updateScore(_user!.uid, _user!.score);
+        await _saveToLocal(pendingSync: false);
+      } 
+      catch (_) 
+      {
+        //falló la sincronización a Firestore → marcar pendiente
+        await _saveToLocal(pendingSync: true);
+      }
     } 
     else 
     {

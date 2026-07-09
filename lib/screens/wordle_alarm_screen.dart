@@ -1,8 +1,10 @@
 import 'package:alarm/alarm.dart' as alarm_package show Alarm;
 import 'package:alarmle/screens/home_screen.dart';
 import 'package:alarmle/l10n/app_localizations.dart';
+import 'package:alarmle/viewmodels/user_view_model.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -225,7 +227,14 @@ class _WordleAlarmScreenState extends State<WordleAlarmScreen> {
           _animando = false;
         });
 
-        // 3. Cerrar la actividad de forma segura
+        // 3. Sincronizar puntuación con Firestore a través del ViewModel
+        try {
+          context.read<UserViewModel>().addScore(_puntajeTotal);
+        } catch (_) {
+          //no bloquear la navegación si falla la sincronización
+        }
+
+        // 4. Cerrar la actividad de forma segura
         SystemNavigator.pop();
       }
   } else if (_intentoActual >= 4) {

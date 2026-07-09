@@ -36,6 +36,12 @@ class FirestoreService
     await _db.collection(_collection).doc(uid).update({'score': score});
   }
 
+  //alias semántico — actualizar puntaje del usuario
+  Future<void> updateUserScore(String userId, int newScore) async 
+  {
+    await updateScore(userId, newScore);
+  }
+
   //obtener top 10 usuarios con mayor puntaje
   Future<List<UserModel>> getLeaderboard() async 
   {
