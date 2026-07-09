@@ -415,7 +415,8 @@ class _WordleAlarmScreenState extends State<WordleAlarmScreen> {
                                         style: const TextStyle(
                                             fontSize: 18,
                                             fontWeight: FontWeight.bold,
-                                            letterSpacing: 1.2),
+                                            letterSpacing: 1.2,
+                                            color: Colors.black),
                                       ),
                                     ),
                                   ] else
