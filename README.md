@@ -370,7 +370,9 @@ end
 
 1. Descargar el archivo APK desde el siguiente enlace:
 
-> **(Agregar enlace del APK aquí)**
+> **[⬇ Descargar APK (arm64-v8a) — 21.9 MB](./release/app-arm64-v8a-release.apk)**
+> 
+> También disponible para [armeabi-v7a](./release/app-armeabi-v7a-release.apk) y [x86_64](./release/app-x86_64-release.apk)
 
 2. Habilitar la instalación desde orígenes desconocidos en Android.
 
